@@ -1,0 +1,14 @@
+{
+	"name": "dnaber/wp-provisioner",
+	"type": "library",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"WpProvision\\": "src/"
+		}
+	},
+    "require": {
+        "symfony/console": "~3.0",
+        "symfony/process": "^3.0"
+    }
+}
