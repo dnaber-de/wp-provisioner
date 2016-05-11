@@ -15,4 +15,13 @@ interface Shell {
 	 * @return bool
 	 */
 	public function commandExists( $command );
+
+	/**
+	 * Verify if a file exists and is executable
+	 *
+	 * @param $file
+	 *
+	 * @return bool
+	 */
+	public function isExecutable( $file );
 }

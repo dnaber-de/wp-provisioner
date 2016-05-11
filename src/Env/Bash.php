@@ -50,4 +50,16 @@ class Bash implements Shell {
 		return "false" !== trim( $output );
 	}
 
+	/**
+	 * Verify if a file exists and is executable
+	 *
+	 * @param $file
+	 *
+	 * @return bool
+	 */
+	public function isExecutable( $file ) {
+
+		return file_exists( $file ) && is_executable( $file );
+	}
+
 }
