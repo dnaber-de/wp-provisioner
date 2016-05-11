@@ -20,7 +20,6 @@ interface Process {
 	 * @return self
 	 *
 	 * @throws \InvalidArgumentException if the timeout is negative
-	 *
 	 */
 	public function setTimeout( $timeout );
 
