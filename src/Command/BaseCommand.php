@@ -3,11 +3,13 @@
 namespace WpProvision\Command;
 
 /**
- * Interface SubCommand
+ * Interface BaseCommand
+ *
+ * Wraps a command (like `$ wp`) so you have to deal only with the arguments
  *
  * @package WpProvision\Command
  */
-interface SubCommand {
+interface BaseCommand {
 
 	/**
 	 * @return string
@@ -20,9 +22,9 @@ interface SubCommand {
 	public function commandExists();
 
 	/**
-	 * @param string $command
+	 * @param array $arguments
 	 *
 	 * @return string
 	 */
-	public function run( $command );
+	public function run( array $arguments = [] );
 }

@@ -3,7 +3,9 @@
 namespace WpProvision\Command;
 
 use
-	WpProvision\Env;
+	WpProvision\Env,
+	WpProvision\Process,
+	LogicException;
 
 /**
  * Wrapper for WP-CLI command
@@ -14,7 +16,7 @@ use
  *
  * @package WpProvision\Command
  */
-class WpCli implements SubCommand {
+class WpCli implements WpCliCommand {
 
 	private $base;
 
@@ -22,11 +24,17 @@ class WpCli implements SubCommand {
 
 	private $shell;
 
+	private $process_builder;
+
 	/**
 	 * @param Env\Shell $shell
 	 * @param string $bin_path
 	 */
-	public function __construct( Env\Shell $shell, $bin_path = '' ) {
+	public function __construct(
+		Env\Shell $shell,
+		$bin_path = '',
+		Process\ProcessBuilder $process_builder = NULL
+	) {
 
 		$this->shell = $shell;
 		if ( $this->bin_path ) {
@@ -35,6 +43,17 @@ class WpCli implements SubCommand {
 		} else {
 			$this->base = 'wp';
 		}
+
+		if ( ! $process_builder ) {
+			$process_builder = new Process\SymfonyProcessBuilderAdapter;
+		}
+		$this->process_builder = $process_builder;
+
+		/**
+		 * This sucks as we cannot know if the process builder is used elsewhere.
+		 * Not sure if we should clone the object here or if we need an object-builder builder.
+		 */
+		$this->process_builder->setPrefix( $this->base() );
 	}
 
 	/**
@@ -51,15 +70,29 @@ class WpCli implements SubCommand {
 	public function commandExists() {
 
 		if ( $this->bin_path ) {
-			return file_exists( $this->bin_path )
-				&& is_executable( $this->bin_path );
-		};
+			return $this->shell->isExecutable( $this->bin_path );
+		}
 
 		return $this->shell->commandExists( $this->base );
 	}
 
-	public function run( $command ) {
-		// TODO: Implement run() method.
+	/**
+	 * @param array $arguments
+	 *
+	 * @return string
+	 */
+	public function run( array $arguments = [] ) {
+
+		if ( ! $this->commandExists() )
+			throw new LogicException( "The base command {$this->base()} does not exists or is not executable." );
+
+		$process = $this
+			->process_builder
+			->setArguments( $arguments )
+			->getProcess()
+			->mustRun();
+
+		return $process->getOutput();
 	}
 
 }
