@@ -18,12 +18,24 @@ use
  */
 class WpCli implements WpCliCommand {
 
+	/**
+	 * @var string
+	 */
 	private $base;
 
+	/**
+	 * @var string
+	 */
 	private $bin_path;
 
+	/**
+	 * @var Env\Shell
+	 */
 	private $shell;
 
+	/**
+	 * @var Process\ProcessBuilder
+	 */
 	private $process_builder;
 
 	/**
@@ -88,6 +100,7 @@ class WpCli implements WpCliCommand {
 
 		$process = $this
 			->process_builder
+			->setArguments( [] ) // reset the process builder state
 			->setArguments( $arguments )
 			->getProcess()
 			->mustRun();
