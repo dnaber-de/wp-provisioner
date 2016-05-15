@@ -7,8 +7,9 @@
 			"WpProvision\\": "src/"
 		}
 	},
-    "require": {
-        "symfony/console": "~3.0",
-        "symfony/process": "^3.0"
-    }
+	"require": {
+		"symfony/console": "~3.0",
+		"symfony/process": "^3.0",
+		"inpsyde/wp-cli-site-url": "~1.0"
+	}
 }
