@@ -15,7 +15,7 @@ Thus, you set up your local development system, create the 15 sites and make all
 ## How it works
 WP Provisioner is a standalone PHP commandline script, that looks for a `provisioner.php` in your working directory (mostly in your project directory). It uses WP-CLI as API to your WordPress application. The following example shows how to install WP multisite and create some sites and activate some plugins:
 
-```
+```php
 <?php # -*- coding: utf-8 -*-
 
 namespace WpProvision\Api;
