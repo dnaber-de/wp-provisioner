@@ -2,6 +2,75 @@
 
 API to instantiate and manage your WordPress installation structure. 
 
+## What & why
+
+Assuming you planning your next web project based on WordPress. The concept of this project requires 15 sites, managed by one WordPress multisite installation. Each site has its own language and a different set of settings and activated plugins and themes. You might want to set up at least a testing server and a production system. Further you have 3 colleagues working with you on this project.
+
+Thus, you set up your local development system, create the 15 sites and make all the settings to the sites. Now you have three options to deploy these state of your system to your fellows or to the testing/production systems:
+
+ * Share database dumps. That might work for the initial setup but what happens, if the concept changes later?
+ * Documentation: write down every parameter of the concept and do it manually.
+ * Do it programmatic using WP Provisioner
+
+## How it works
+WP Provisioner is a standalone PHP commandline script, that looks for a `provisioner.php` in your working directory (mostly in your project directory). It uses WP-CLI as API to your WordPress application. The following example shows how to install WP multisite and create some sites and activate some plugins:
+
+```
+<?php # -*- coding: utf-8 -*-
+
+namespace WpProvision\Api;
+
+$project_dir = dirname( dirname( dirname( __DIR__ ) ) );
+$wp_dir = $project_dir . '/wp';
+
+/**
+ * @var WpProvisioner $api
+ */
+$api->setWpDir( $wp_dir );
+
+$api->versionList()->addProvision(
+	'1.0.0',
+	function( $provider ) {
+		/**
+		 * @var \WpProvision\Api\WpCommandProvider $provider
+		 */
+
+		$admin_email = 'david@wp-provisioner.tld';
+		$admin_login = 'david';
+		// install a multisite
+		$provider->core()->multisiteInstall(
+			"http://myproject.net",
+			[ 'login' => $admin_login, 'email' => $admin_email ]
+		);
+
+		// create some sites
+		$site_1_id = $provider->site()->create(
+			"http://de.myproject.net/",
+			[ 'user_email' => $admin_email ]
+		);
+		$site_2_id = $provider->site()->create(
+			"http://fr.myproject.net/shop/",
+			[ 'user_email' => $admin_email ]
+		);
+
+		// install some plugins (they usually should be as you're using composer, aren't you?)
+		$provider->plugin()->activate(
+			[ 'woocommerce', 'akismet' ],
+			[ 'site_url' => 'http://fr.myproject.net/shop/' ]
+		);
+		$provider->plugin()->activate(
+			'multilingual-press',
+			[ 'network' => TRUE ]
+		);
+	}
+);
+```
+
+The WP directory depends on your local setup. After installing all dependencies you could simply run `$ vendor/bin/wp-provisioner provision 1.0.0` to run the routines you registered for version `1.0.0` in your `provision.php`.
+
+## Goal
+The idea of this tool is to automate the process of configuring WordPress as complete as possible to integrate it into already automated deployment processes. However, it is in a early _alpha_ state. Some features are not implemented jet and the API might change slightly.
+
 ## API
 
 About the `$graceful` parameter: Every `create()` method has a boolean parameter called `$graceful` (mostly the last one) which make the method act like _create-if-not-exists_, which is always the default behavior. If set ot `FALSE`, the method will throw exceptions, if for example a site is created that already exists.
