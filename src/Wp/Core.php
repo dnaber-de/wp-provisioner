@@ -55,5 +55,5 @@ interface Core {
 	 *
 	 * @return bool
 	 */
-	public function multisite_install( $url, array $admin, array $options = [ ], $graceful = TRUE );
+	public function multisiteInstall( $url, array $admin, array $options = [ ], $graceful = TRUE );
 }
