@@ -114,6 +114,40 @@ class WpCliCore implements Core {
 	}
 
 	/**
+	 * @link http://wp-cli.org/commands/core/multisite-convert/
+	 *
+	 * @param array $options
+	 *      string $options[ 'base_path' ] Base URL path for all sites, default: '/'
+	 *      string $options[ 'title' ] Title of the network
+	 *      bool   $options[ 'subdomains' ] Subdomain install? Default: TRUE
+	 *
+	 * @return bool
+	 */
+	public function multisiteConvert( array $options = [ ] ) {
+
+		$base_path = isset( $options[ 'base_path' ] )
+			? '/' . ltrim( $options[ 'base_path' ], '/' )
+			: '/';
+
+		$subdomains = isset( $options[ 'subdomains' ] )
+			? (bool) $options[ 'subdomains' ]
+			: TRUE;
+
+
+		$arguments = [ 'core', 'multisite-convert', "--base={$base_path}" ];
+		if ( $subdomains ) {
+			$arguments[] = '--subdomains';
+		}
+		if ( isset( $options[ 'title' ] ) ) {
+			$arguments[] = "--title={$options[ 'title' ]}";
+		}
+
+		echo $this->wp_cli->run( $arguments );
+
+		return TRUE;
+	}
+
+	/**
 	 * @param string $url      The URL of the network (e.g. http://example.dev/)
 	 * @param array $admin
 	 *                         string $admin[ 'email' ] (required)

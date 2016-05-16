@@ -17,19 +17,29 @@ interface Core {
 	public function isInstalled( $network = FALSE );
 
 	/**
-	 * @param string $url URL of the new site
-	 * @param array  $admin
-	 *      string $admin[ 'email' ] (required)
-	 *      string $admin[ 'login' ] (required)
-	 *      string $admin[ 'password' ] (optional, will be generated if not provided)
+	 * @param string $url    URL of the new site
+	 * @param array $admin
+	 *                       string $admin[ 'email' ] (required)
+	 *                       string $admin[ 'login' ] (required)
+	 *                       string $admin[ 'password' ] (optional, will be generated if not provided)
 	 * @param array $options
-	 *      string $options[ 'title' ]
-	 *      bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
-	 * @param bool  $graceful Throw exceptions, when set to FALSE, default: TRUE
+	 *                       string $options[ 'title' ]
+	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
+	 * @param bool $graceful Throw exceptions, when set to FALSE, default: TRUE
 	 *
 	 * @return bool
 	 */
-	public function install( $url, array $admin, array $options = [], $graceful = TRUE );
+	public function install( $url, array $admin, array $options = [ ], $graceful = TRUE );
+
+	/**
+	 * @param array $options
+	 *      string $options[ 'base_path' ] Base URL path for all sites, default: '/'
+	 *      string $options[ 'title' ] Title of the network
+	 *      bool   $options[ 'subdomains' ] Subdomain install? Default: TRUE
+	 *
+	 * @return bool
+	 */
+	public function multisiteConvert( array $options = [ ] );
 
 	/**
 	 * @param string $url    The URL of the network (e.g. http://example.dev/)
