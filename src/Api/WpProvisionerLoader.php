@@ -17,7 +17,7 @@ use
  */
 class WpProvisionerLoader implements WpProvisioner {
 
-	const VERSION = 'dev-master';
+	const VERSION = '1.0.0-alpha1';
 
 	/**
 	 * @var string
