@@ -1,5 +1,6 @@
 {
 	"name": "dnaber/wp-provisioner",
+	"description": "Install and configure WordPress programmatic and continuable",
 	"type": "library",
 	"license": "MIT",
 	"autoload": {
