@@ -6,6 +6,28 @@ API to instantiate and manage your WordPress installation structure.
 
 About the `$graceful` parameter: Every `create()` method has a boolean parameter called `$graceful` (mostly the last one) which make the method act like _create-if-not-exists_, which is always the default behavior. If set ot `FALSE`, the method will throw exceptions, if for example a site is created that already exists.
 
+### Wp\Core
+
+```
+bool isInstalled( [ bool $network = FALSE ] )
+```
+Check if WordPress is installed.
+
+```
+bool install( string $url, array $admin [, array $options = [ ] [, bool $graceful = TRUE ] ] )
+```
+Installs WordPress.
+
+```
+bool multisiteConvert( [ array $options = [ ] ] )
+```
+Converts a single-site to a multisite. **Modifies your `wp-config.php`** (See issue #1)
+
+```
+bool multisiteInstall( $url, array $admin [, array $options = [ ] [, bool $graceful = TRUE ] ] );
+```
+Installs a multisite from scratch. **Modifies your `wp-config.php`** (See issue #1)
+
 ### Wp\Site
 
 ```
