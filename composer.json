@@ -8,6 +8,9 @@
 			"WpProvision\\": "src/"
 		}
 	},
+	"bin": [
+		"bin/wp-provisioner"
+	],
 	"require": {
 		"symfony/console": "~2.7",
 		"symfony/process": "~2.1",
