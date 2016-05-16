@@ -48,6 +48,10 @@ class WpCli implements WpCliCommand {
 		Process\ProcessBuilder $process_builder = NULL
 	) {
 
+		/**
+		 * Todo: remove this. We should rely only on paths to binaries provided by composer
+		 * and not on global installed versions of WP-CLI.
+		 */
 		$this->shell = $shell;
 		if ( $this->bin_path ) {
 			$this->bin_path = realpath( $bin_path );
