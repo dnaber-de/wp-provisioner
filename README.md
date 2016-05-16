@@ -28,6 +28,33 @@ bool multisiteInstall( $url, array $admin [, array $options = [ ] [, bool $grace
 ```
 Installs a multisite from scratch. **Modifies your `wp-config.php`** (See issue #1)
 
+### Wp\Plugin
+
+```
+bool activate( string $plugin [ , array $options = [ ] ] )
+```
+Activates a plugin.
+
+```
+bool deactivate( string $plugin [ , array $options = [ ] ] )
+```
+Deactivates a plugin.
+
+```
+bool isInstalled( string $plugin [ , array $options = [ ] ] )
+```
+Checks, if a plugin is «installed». That means, if the plugin files are available for activation.
+
+```
+bool isActive( string $plugin [ , array $options = [ ] ] )
+```
+Checks, if a plugin is activated. Set `$options[ 'network' ]` to `TRUE` to check for network-wide activation.
+
+```
+bool uninstall( $plugin, array $options = [ ] )
+```
+Run uninstall routines for a plugin. This tries to deactivate the plugin before (unless you specify `$options[ 'deactivate' ] = FALSE`). _I suggest to manually deactivate the plugin depending on the plugin activation status._ If you want to also delete the plugin files, pass `$options[ 'delete' ] = TRUE` to the method.
+
 ### Wp\Site
 
 ```
