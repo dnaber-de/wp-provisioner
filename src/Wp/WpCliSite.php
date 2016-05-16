@@ -5,7 +5,8 @@ namespace WpProvision\Wp;
 use
 	WpProvision\Command,
 	Exception,
-	InvalidArgumentException;
+	InvalidArgumentException,
+	LogicException;
 
 /**
  * Class WpCliSite
@@ -19,18 +20,26 @@ class WpCliSite implements Site {
 	 */
 	private $wp_cli;
 
+	/**
+	 * @var User
+	 */
 	private $user;
 
 	/**
-	 * WpCliSite constructor.
-	 *
-	 * @param Command\WpCliCommand $wp_cli
-	 * @param User $user
+	 * @var Plugin
 	 */
-	public function __construct( Command\WpCliCommand $wp_cli, User $user ) {
+	private $plugin;
+
+	/**
+	 * @param Command\WpCliCommand $wp_cli
+	 * @param User                 $user
+	 * @param Plugin               $plugin
+	 */
+	public function __construct( Command\WpCliCommand $wp_cli, User $user, Plugin $plugin ) {
 
 		$this->wp_cli = $wp_cli;
 		$this->user   = $user;
+		$this->plugin = $plugin;
 	}
 
 	/**
@@ -115,6 +124,19 @@ class WpCliSite implements Site {
 		if ( isset( $attributes[ 'slug' ] ) ) {
 			$use_url = FALSE;
 			$slug    = $attributes[ 'slug' ];
+		}
+
+		// check dependencies
+		$cli_site_url_plugin = 'wp-cli-site-url';
+		if ( $use_url && ! $this->plugin->isActive( $cli_site_url_plugin, [ 'network' => TRUE ] ) ) {
+			// try to activate it, if installed (it should, it is a dependency of WP Provisioner)
+			if ( $this->plugin->isInstalled( $cli_site_url_plugin ) ) {
+				$this->plugin->activate( $cli_site_url_plugin, [ 'network' => TRUE ] );
+			}
+			// check again...
+			if ( ! $this->plugin->isActive( $cli_site_url_plugin, [ 'network' => TRUE ] ) ) {
+				throw new LogicException( "Plugin inpsyde/{$cli_site_url_plugin} is not available but required" );
+			}
 		}
 
 		$create_args = [ 'site', 'create', "--slug={$slug}", '--porcelain' ];
