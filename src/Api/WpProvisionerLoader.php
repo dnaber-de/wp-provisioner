@@ -110,13 +110,17 @@ class WpProvisionerLoader implements WpProvisioner {
 		// when installed separately as »project«
 		$autoload_project = $base_dir . '/vendor/autoload.php';
 		// when installed as dependency
-		$autoload_library = dirname( $base_dir ) . '/autoload.php';
+		$autoload_library = dirname( // /vendor
+			dirname(                 // /dnaber
+				$base_dir            // /wp-provisioner
+			)
+		) . '/autoload.php';
 
 		if ( file_exists( $autoload_project ) ) {
 			$this->vendor_dir = $base_dir . '/vendor';
 			require_once $autoload_project;
 		} elseif( file_exists( $autoload_library ) ) {
-			$this->vendor_dir = dirname( $base_dir );
+			$this->vendor_dir = dirname( dirname( $base_dir ) );
 			require_once $autoload_library;
 		} else {
 			echo "Composer autoload file not found\n";
