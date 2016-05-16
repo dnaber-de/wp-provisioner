@@ -39,4 +39,13 @@ interface ProcessBuilder {
 	 * @throws \LogicException In case no arguments have been provided
 	 */
 	public function getProcess();
+
+	/**
+	 * Sets the working directory.
+	 *
+	 * @param null|string $cwd The working directory
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function setWorkingDirectory( $cwd );
 }
