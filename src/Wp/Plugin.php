@@ -12,8 +12,9 @@ interface Plugin {
 	/**
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: FALSE
-	 *      bool $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter)
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: FALSE
+	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter)
+	 *      string $option[ 'site_url' ] The site_url the plugin should be activated in, default: network main site
 	 *
 	 * @return bool
 	 */
@@ -22,9 +23,10 @@ interface Plugin {
 	/**
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: FALSE
-	 *      bool $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: FALSE
-	 *      bool $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: FALSE
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: FALSE
+	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: FALSE
+	 *      bool   $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: FALSE
+	 *      string $option[ 'site_url' ] The site_url the plugin should be deactivated, default: network main site
 	 *
 	 * @return bool
 	 */
@@ -53,8 +55,9 @@ interface Plugin {
 	/**
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'deactivate' ] Deactivate plugin before uninstallation, default: TRUE
-	 *      bool $option[ 'delete' ] Deletes files after uninstallation , default: FALSE
+	 *      bool   $options[ 'deactivate' ] Deactivate plugin before uninstallation, default: TRUE
+	 *      bool   $option[ 'delete' ] Deletes files after uninstallation , default: FALSE
+	 *      string $option[ 'site_url' ] The site_url the uninstall routines should run in, default: network main site
 	 *
 	 * @return bool
 	 */

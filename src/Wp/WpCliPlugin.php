@@ -32,8 +32,9 @@ class WpCliPlugin implements Plugin {
 	 *
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: FALSE
-	 *      bool $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter)
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: FALSE
+	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter)
+	 *      string $option[ 'site_url' ] The site_url the plugin should be activated in, default: network main site
 	 *
 	 * @return bool
 	 */
@@ -57,6 +58,10 @@ class WpCliPlugin implements Plugin {
 			$arguments[] = '--network';
 		}
 
+		if ( isset( $options[ 'site_url' ] ) ) {
+			$arguments[] = "--url={$options[ 'site_url' ]}";
+		}
+
 		$this->wp_cli->run( $arguments );
 
 		return TRUE;
@@ -72,9 +77,10 @@ class WpCliPlugin implements Plugin {
 	 *
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: FALSE
-	 *      bool $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: FALSE
-	 *      bool $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: FALSE
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: FALSE
+	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: FALSE
+	 *      bool   $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: FALSE
+	 *      string $option[ 'site_url' ] The site_url the plugin should be deactivated, default: network main site
 	 *
 	 * @return bool
 	 */
@@ -100,6 +106,10 @@ class WpCliPlugin implements Plugin {
 
 		if ( isset( $options[ 'uninstall' ] ) && TRUE == $options[ 'uninstall' ] ) {
 			$arguments[] = '--uninstall';
+		}
+
+		if ( isset( $options[ 'site_url' ] ) ) {
+			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
 		$this->wp_cli->run( $arguments );
@@ -173,8 +183,9 @@ class WpCliPlugin implements Plugin {
 	 *
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool $options[ 'deactivate' ] Deactivate plugin before uninstallation, default: TRUE
-	 *      bool $option[ 'delete' ] Deletes files after uninstallation , default: FALSE
+	 *      bool   $options[ 'deactivate' ] Deactivate plugin before uninstallation, default: TRUE
+	 *      bool   $option[ 'delete' ] Deletes files after uninstallation , default: FALSE
+	 *      string $option[ 'site_url' ] The site_url the uninstall routines should run in, default: network main site
 	 *
 	 * @return bool
 	 */
@@ -197,6 +208,10 @@ class WpCliPlugin implements Plugin {
 
 		if ( ! isset( $options[ 'delete' ] ) || TRUE !== $options[ 'delete' ] ) {
 			$arguments[] = '--skip-delete';
+		}
+
+		if ( isset( $options[ 'site_url' ] ) ) {
+			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
 		echo $this->wp_cli->run( $arguments );
