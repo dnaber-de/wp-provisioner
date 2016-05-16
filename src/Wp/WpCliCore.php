@@ -190,5 +190,4 @@ class WpCliCore implements Core {
 
 		return TRUE;
 	}
-
 }
