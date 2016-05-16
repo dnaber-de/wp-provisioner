@@ -73,7 +73,7 @@ class WpProvisionerLoader implements WpProvisioner {
 		$app = new SymfonyConsole\Application( 'WP Provisioner', self::VERSION );
 		$app->add( new App\Command\Provision( $this->versions ) );
 		$this->load_provision_file( $provison_file );
-		
+
 		$app->run();
 	}
 
@@ -101,6 +101,8 @@ class WpProvisionerLoader implements WpProvisioner {
 	}
 
 	/**
+	 * Todo: Exclude this
+	 *
 	 * @param string $base_dir Path of the libraries root directory
 	 */
 	private function bootstrap( $base_dir ) {
