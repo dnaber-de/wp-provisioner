@@ -28,7 +28,7 @@ namespace WpProvision\Api;
  */
 
 // set the WordPess install directory. This is important for WP-CLI to run properly
-$api->setWpDir( __DIR__ . '/wp );
+$api->setWpDir( __DIR__ . '/wp' );
 
 // add a provision routine named '1.0.0'. The VersionList contains all provision routines for all versions
 $api->versionList()->addProvision(
