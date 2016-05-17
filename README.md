@@ -20,23 +20,29 @@ WP Provisioner is a standalone PHP commandline script, that looks for a `provisi
 
 namespace WpProvision\Api;
 
-$project_dir = dirname( dirname( dirname( __DIR__ ) ) );
-$wp_dir = $project_dir . '/wp';
-
 /**
- * @var WpProvisioner $api
+ * The variable $api points to an instance of WpProvisioner that gives 
+ * you access to the public API
+ *
+ * @var \WpProvision\Api\WpProvisioner $api
  */
-$api->setWpDir( $wp_dir );
 
+// set the WordPess install directory. This is important for WP-CLI to run properly
+$api->setWpDir( __DIR__ . '/wp );
+
+// add a provision routine named '1.0.0'. The VersionList contains all provision routines for all versions
 $api->versionList()->addProvision(
 	'1.0.0',
+	/**
+	 * The command provider gives you access to all Wp Commands like core, site, user or plugin
+	 *
+	 * @param \WpProvision\Api\WpCommandProvider $provider
+	 */
 	function( $provider ) {
-		/**
-		 * @var \WpProvision\Api\WpCommandProvider $provider
-		 */
 
 		$admin_email = 'david@wp-provisioner.tld';
 		$admin_login = 'david';
+
 		// install a multisite
 		$provider->core()->multisiteInstall(
 			"http://myproject.net",
