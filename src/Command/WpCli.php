@@ -53,7 +53,7 @@ class WpCli implements WpCliCommand {
 		 * and not on global installed versions of WP-CLI.
 		 */
 		$this->shell = $shell;
-		if ( $this->bin_path ) {
+		if ( $bin_path ) {
 			$this->bin_path = realpath( $bin_path );
 			$this->base = $bin_path;
 		} else {
