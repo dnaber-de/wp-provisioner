@@ -63,20 +63,74 @@ class WpCliSite implements Site {
 	 */
 	public function siteId( $url, $network_id = 0 ) {
 
-		$arguments = [ 'site', 'list', "--url={$url}", '--field=blog_id' ];
+		$arguments = [ 'site', 'list', '--fields=blog_id,url' ];
 		if ( $network_id ) {
 			$arguments[] = '--network=' . (int) $network_id;
 		}
 
+		/**
+		 * @param $url_1
+		 * @param $url_2
+		 *
+		 * @return bool
+		 */
+		$urls_match = function( $url_1, $url_2 ) {
+
+			if ( parse_url( $url_1, PHP_URL_HOST ) !== parse_url( $url_2, PHP_URL_HOST ) ) {
+				return FALSE;
+			}
+
+			$url_1_path = parse_url( $url_1, PHP_URL_PATH );
+			$url_2_path = parse_url( $url_2, PHP_URL_PATH );
+			// make sure that 'myhost.dev' matches 'myhost.dev/'
+			$url_1_path = rtrim( $url_1_path, '/' ) . '/';
+			$url_2_path = rtrim( $url_2_path, '/' ) . '/';
+
+			if ( $url_1_path !== $url_2_path ) {
+				return FALSE;
+			}
+
+			return TRUE;
+		};
+
+		/**
+		 * Parse a line from WP-CLI output
+		 * e.g. "2   siteurl.tld"
+		 * into an array with 'id' and 'url'
+		 *
+		 * @param $line
+		 *
+		 * @return NULL|array
+		 */
+		$parse_site = function( $line ) {
+			$line = trim( $line );
+			list( $id, $url ) = preg_split( '~\s+~', $line );
+
+			if ( ! is_numeric( $id ) ) {
+				return NULL; // skip table header
+			}
+
+			return [ 'id' => (int) $id, 'url' => trim( $url ) ];
+		};
+
 		try {
+			$result = trim( $this->wp_cli->run( $arguments ) );
+			$sites  = explode( "\n",$result );
+			$sites  = array_map( $parse_site, $sites );
+			$sites  = array_filter( $sites, 'is_array' );
+			foreach ( $sites as $site ) {
+				if ( $urls_match( $site[ 'url' ], $url ) ) {
+					return $site[ 'id' ];
+				}
+			}
+
+			return 0;
+		} catch ( Exception $e ) {
 			/**
 			 * Todo: Should the exception better be catched inside the WpCli object?
 			 * The exception is the expected behaviour if the site does not exists,
 			 * therefore we catch it and do not propagate it up
 			 */
-			$result = trim( $this->wp_cli->run( $arguments ) );
-			return (int) $result;
-		} catch ( Exception $e ) {
 			return 0;
 		}
 	}
