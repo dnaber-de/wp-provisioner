@@ -19,5 +19,8 @@
 	},
 	"suggest": {
 		"wecodemore/wpstarter": "Easily bootstrap whole site Composer packages for WordPress."
+	},
+	"require-dev": {
+		"inpsyde/monkery-test-case": "~1.1.0"
 	}
 }
