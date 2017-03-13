@@ -1,27 +1,27 @@
 {
-	"name": "dnaber/wp-provisioner",
-	"description": "Install and configure WordPress programmatic and continuable",
-	"type": "library",
-	"license": "MIT",
-	"autoload": {
-		"psr-4": {
-			"WpProvision\\": "src/"
-		}
-	},
-	"bin": [
-		"bin/wp-provisioner"
-	],
-	"require": {
-		"php": ">= 5.6",
-		"symfony/console": "~2.7",
-		"symfony/process": "~2.1",
-		"inpsyde/wp-cli-site-url": "~1.0",
-		"wp-cli/wp-cli": "~0.23"
-	},
-	"suggest": {
-		"wecodemore/wpstarter": "Easily bootstrap whole site Composer packages for WordPress."
-	},
-	"require-dev": {
-		"inpsyde/monkery-test-case": "~1.1.0"
-	}
+    "name": "dnaber/wp-provisioner",
+    "description": "Install and configure WordPress programmatic and continuable",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WpProvision\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/wp-provisioner"
+    ],
+    "require": {
+        "php": ">= 5.6",
+        "symfony/console": "~2.7",
+        "symfony/process": "~2.1",
+        "inpsyde/wp-cli-site-url": "~1.0",
+        "wp-cli/wp-cli": "~0.23"
+    },
+    "suggest": {
+        "wecodemore/wpstarter": "Easily bootstrap whole site Composer packages for WordPress."
+    },
+    "require-dev": {
+        "inpsyde/monkery-test-case": "~1.1.0"
+    }
 }
