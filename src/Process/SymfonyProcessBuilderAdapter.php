@@ -2,8 +2,7 @@
 
 namespace WpProvision\Process;
 
-use
-	Symfony\Component\Process\ProcessBuilder as SymfonyProcessBuilder;
+use Symfony\Component\Process\ProcessBuilder as SymfonyProcessBuilder;
 
 /**
  * Class SymfonyProcessBuilderAdapter

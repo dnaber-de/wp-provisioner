@@ -2,8 +2,7 @@
 
 namespace WpProvision\Api;
 
-use
-	LogicException;
+use LogicException;
 
 /**
  * Class IsolatedVersions

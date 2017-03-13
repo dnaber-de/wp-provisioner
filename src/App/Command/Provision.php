@@ -2,33 +2,34 @@
 
 namespace WpProvision\App\Command;
 
-use
-	WpProvision\Api,
-	Symfony\Component\Console\Command as SymfonyCommand,
-	Symfony\Component\Console\Input as SymfonyInput,
-	Symfony\Component\Console\Output as SymfonyOutput,
-	LogicException;
+use WpProvision\Api\Versions;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use LogicException;
 
 /**
  * Class Provision
  *
  * @package WpProvision\App\Command
  */
-class Provision extends SymfonyCommand\Command {
+class Provision extends Command  {
 
 	const ARGUMENT_VERSION = 'version';
 	const OPTION_ISOLATION = 'isolation';
 
 	/**
-	 * @var Api\Versions
+	 * @var Versions
 	 */
 	private $versions;
 
 	/**
-	 * @param Api\Versions $versions
+	 * @param Versions $versions
 	 * @param string       $name
 	 */
-	public function __construct( Api\Versions $versions, $name = NULL ) {
+	public function __construct( Versions $versions, $name = NULL ) {
 
 		$this->versions = $versions;
 		parent::__construct( $name );
@@ -42,11 +43,11 @@ class Provision extends SymfonyCommand\Command {
 		$this
 			->setName( 'provision' )
 			->setDescription( 'Runs the provision routines of a given version' )
-			->addArgument( self::ARGUMENT_VERSION, SymfonyInput\InputArgument::REQUIRED, 'The version to run provisions for' )
+			->addArgument( self::ARGUMENT_VERSION, InputArgument::REQUIRED, 'The version to run provisions for' )
 			->addOption(
 				self::OPTION_ISOLATION,
 				NULL,
-				SymfonyInput\InputOption::VALUE_OPTIONAL,
+				InputOption::VALUE_OPTIONAL,
 				'Skip all version provisioning routines prior the given version',
 				FALSE
 			);
@@ -60,14 +61,14 @@ class Provision extends SymfonyCommand\Command {
 	 * execute() method, you set the code to execute by passing
 	 * a Closure to the setCode() method.
 	 *
-	 * @param SymfonyInput\InputInterface  $input  An InputInterface instance
-	 * @param SymfonyOutput\OutputInterface $output An OutputInterface instance
+	 * @param InputInterface  $input  An InputInterface instance
+	 * @param OutputInterface $output An OutputInterface instance
 	 *
 	 * @return null|int null or 0 if everything went fine, or an error code
 	 *
 	 * @throws LogicException When this abstract method is not implemented
 	 */
-	protected function execute( SymfonyInput\InputInterface $input, SymfonyOutput\OutputInterface $output ) {
+	protected function execute( InputInterface $input, OutputInterface $output ) {
 
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
 		if ( ! $this->versions->versionExists( $version ) ) {
@@ -76,6 +77,8 @@ class Provision extends SymfonyCommand\Command {
 
 		$isolation = (bool) $input->getOption( self::OPTION_ISOLATION );
 		$this->versions->executeProvision( $version, $isolation );
+
+		return 0;
 	}
 
 }

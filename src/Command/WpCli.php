@@ -2,10 +2,10 @@
 
 namespace WpProvision\Command;
 
-use
-	WpProvision\Env,
-	WpProvision\Process,
-	LogicException;
+use WpProvision\Env\Shell;
+use WpProvision\Process\ProcessBuilder;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
+use LogicException;
 
 /**
  * Wrapper for WP-CLI command
@@ -29,23 +29,24 @@ class WpCli implements WpCliCommand {
 	private $bin_path;
 
 	/**
-	 * @var Env\Shell
+	 * @var Shell
 	 */
 	private $shell;
 
 	/**
-	 * @var Process\ProcessBuilder
+	 * @var ProcessBuilder
 	 */
 	private $process_builder;
 
 	/**
-	 * @param Env\Shell $shell
+	 * @param Shell $shell
 	 * @param string $bin_path
+	 * @param ProcessBuilder $process_builder
 	 */
 	public function __construct(
-		Env\Shell $shell,
+		Shell $shell,
 		$bin_path = '',
-		Process\ProcessBuilder $process_builder = NULL
+		ProcessBuilder $process_builder = NULL
 	) {
 
 		/**
@@ -61,7 +62,7 @@ class WpCli implements WpCliCommand {
 		}
 
 		if ( ! $process_builder ) {
-			$process_builder = new Process\SymfonyProcessBuilderAdapter;
+			$process_builder = new SymfonyProcessBuilderAdapter();
 		}
 		$this->process_builder = $process_builder;
 

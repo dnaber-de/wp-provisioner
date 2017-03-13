@@ -2,8 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use
-	Exception;
+use Exception;
 
 interface User {
 

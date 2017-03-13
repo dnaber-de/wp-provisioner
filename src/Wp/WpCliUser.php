@@ -2,11 +2,10 @@
 
 namespace WpProvision\Wp;
 
-use
-	WpProvision\Command,
-	DateTimeInterface,
-	Exception,
-	InvalidArgumentException;
+use WpProvision\Command\WpCliCommand;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 
 /**
  * Class WpCliUser
@@ -16,14 +15,14 @@ use
 class WpCliUser implements User {
 
 	/**
-	 * @var Command\WpCliCommand
+	 * @var WpCliCommand
 	 */
 	private $wp_cli;
 
 	/**
-	 * @param Command\WpCliCommand $wp_cli
+	 * @param WpCliCommand $wp_cli
 	 */
-	public function __construct( Command\WpCliCommand $wp_cli ) {
+	public function __construct( WpCliCommand $wp_cli ) {
 
 		$this->wp_cli = $wp_cli;
 	}

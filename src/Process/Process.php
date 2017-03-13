@@ -7,7 +7,7 @@ namespace WpProvision\Process;
  *
  * Incomplete interface for Symfony\Component\Process\Process
  *
- * @see Symfony\Component\Process\Process
+ * @see \Symfony\Component\Process\Process
  * @package WpProvision\Process
  */
 interface Process {
@@ -15,7 +15,7 @@ interface Process {
 	/**
 	 * @param int|float|null $timeout The timeout in seconds
 	 *
-	 * @see Symfony\Component\Process\Process::setTimeout()
+	 * @see \Symfony\Component\Process\Process::setTimeout()
 	 *
 	 * @return self
 	 *
@@ -26,7 +26,7 @@ interface Process {
 	/**
 	 * @param int|float|null $timeout The timeout in seconds
 	 *
-	 * @see Symfony\Component\Process\Process::setIdleTimeout()
+	 * @see \Symfony\Component\Process\Process::setIdleTimeout()
 	 *
 	 * @return self
 	 *
@@ -38,14 +38,14 @@ interface Process {
 	/**
 	 * @param callable|NULL $callback
 	 *
-	 * @see Symfony\Component\Process\Process::mustRun()
+	 * @see \Symfony\Component\Process\Process::mustRun()
 	 *
 	 * @return self
 	 */
 	public function mustRun( callable $callback = null );
 
 	/**
-	 * @see Symfony\Component\Process\Process::getOutput()
+	 * @see \Symfony\Component\Process\Process::getOutput()
 	 *
 	 * @return string
 	 *

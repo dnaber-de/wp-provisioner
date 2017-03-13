@@ -2,8 +2,7 @@
 
 namespace WpProvision\Env;
 
-use
-	WpProvision\Process;
+use WpProvision\Process\ProcessBuilder;
 
 /**
  * Class Bash
@@ -13,14 +12,14 @@ use
 class Bash implements Shell {
 
 	/**
-	 * @var Process\ProcessBuilder
+	 * @var ProcessBuilder
 	 */
 	private $processBuilder;
 
 	/**
-	 * @param Process\ProcessBuilder $processBuilder
+	 * @param ProcessBuilder $processBuilder
 	 */
-	public function __construct( Process\ProcessBuilder $processBuilder ) {
+	public function __construct( ProcessBuilder $processBuilder ) {
 
 		$this->processBuilder = $processBuilder;
 	}

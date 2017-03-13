@@ -2,13 +2,13 @@
 
 namespace WpProvision\Api;
 
-use
-	WpProvision\App,
-	WpProvision\Command,
-	WpProvision\Env,
-	WpProvision\Process,
-	Symfony\Component\Console as SymfonyConsole,
-	LogicException;
+use WpProvision\App\Command\Provision;
+use WpProvision\Command\WpCli;
+use WpProvision\Env\Bash;
+use WpProvision\Process\ProcessBuilder;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
+use Symfony\Component\Console\Application;
+use LogicException;
 
 /**
  * Class WpProvisionerLoader
@@ -30,12 +30,12 @@ class WpProvisionerLoader implements WpProvisioner {
 	private $versions;
 
 	/**
-	 * @var Process\ProcessBuilder
+	 * @var ProcessBuilder
 	 */
 	private $process_builder;
 
 	/**
-	 * @var Command\WpCli
+	 * @var WpCli
 	 */
 	private $wp_cli;
 
@@ -55,9 +55,9 @@ class WpProvisionerLoader implements WpProvisioner {
 		if ( ! file_exists( $this->vendor_dir . '/bin/wp' ) ) {
 			throw new LogicException( "WP executable not found in composer bin dir: '{$this->vendor_dir}/bin/wp'" );
 		}
-		$this->process_builder = new Process\SymfonyProcessBuilderAdapter;
-		$this->wp_cli          = new Command\WpCli(
-			new Env\Bash( new Process\SymfonyProcessBuilderAdapter ),
+		$this->process_builder = new SymfonyProcessBuilderAdapter();
+		$this->wp_cli          = new WpCli(
+			new Bash( new SymfonyProcessBuilderAdapter ),
 			$wp_bin_path,
 			$this->process_builder
 		);
@@ -70,8 +70,8 @@ class WpProvisionerLoader implements WpProvisioner {
 			throw new LogicException( "Provision file not exists or is not readable '{$provison_file}'" );
 		}
 
-		$app = new SymfonyConsole\Application( 'WP Provisioner', self::VERSION );
-		$app->add( new App\Command\Provision( $this->versions ) );
+		$app = new Application( 'WP Provisioner', self::VERSION );
+		$app->add( new Provision( $this->versions ) );
 		$this->load_provision_file( $provison_file );
 
 		$app->run();

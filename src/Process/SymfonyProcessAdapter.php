@@ -2,8 +2,7 @@
 
 namespace WpProvision\Process;
 
-use
-	Symfony\Component\Process\Process as SymfonyProcess;
+use	Symfony\Component\Process\Process as SymfonyProcess;
 
 /**
  * Class SymfonyProcessAdapter

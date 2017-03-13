@@ -2,69 +2,75 @@
 
 namespace WpProvision\Api;
 
-use 
-	WpProvision\Command,
-	WpProvision\Utils,
-	WpProvision\Wp;
+use WpProvision\Command\WpCliCommand;
+use WpProvision\Utils\Sha1PasswordGenerator;
+use WpProvision\Wp\Core;
+use WpProvision\Wp\Plugin;
+use WpProvision\Wp\Site;
+use WpProvision\Wp\User;
+use WpProvision\Wp\WpCliCore;
+use WpProvision\Wp\WpCliPlugin;
+use WpProvision\Wp\WpCliSite;
+use WpProvision\Wp\WpCliUser;
 
 /**
  * Class WpCliCommandProvider
  *
- * Temporary solution to quickly instantiate Wp-Command instances. It's in fact a 
+ * Temporary solution to quickly instantiate Wp-Command instances. It's in fact a
  * courier anti-pattern and will be replaced by a IOC container
- * 
+ *
  * @package WpProvision\Api
  */
 class WpCliCommandProvider implements WpCommandProvider {
 
 	/**
-	 * @var Command\WpCliCommand
+	 * @var WpCliCommand
 	 */
 	private $wp_cli;
-	
+
 	private $core;
 	private $plugin;
 	private $site;
 	private $user;
-	
-	public function __construct( Command\WpCliCommand $wp_cli ) {
-	
+
+	public function __construct( WpCliCommand $wp_cli ) {
+
 		$this->wp_cli = $wp_cli;
-		$this->core = new Wp\WpCliCore( $wp_cli, new Utils\Sha1PasswordGenerator );
-		$this->plugin = new Wp\WpCliPlugin( $wp_cli );
-		$this->user = new Wp\WpCliUser( $wp_cli );
-		$this->site = new Wp\WpCliSite( $wp_cli, $this->user, $this->plugin );
+		$this->core = new WpCliCore( $wp_cli, new Sha1PasswordGenerator() );
+		$this->plugin = new WpCliPlugin( $wp_cli );
+		$this->user = new WpCliUser( $wp_cli );
+		$this->site = new WpCliSite( $wp_cli, $this->user, $this->plugin );
 	}
 
 	/**
-	 * @return Wp\Core
+	 * @return Core
 	 */
 	public function core() {
-		
+
 		return $this->core;
 	}
 
 	/**
-	 * @return Wp\Plugin
+	 * @return Plugin
 	 */
 	public function plugin() {
-		
+
 		return $this->plugin;
 	}
 
 	/**
-	 * @return Wp\Site
+	 * @return Site
 	 */
 	public function site() {
-		
+
 		return $this->site;
 	}
 
 	/**
-	 * @return Wp\User
+	 * @return User
 	 */
 	public function user() {
-		
+
 		return $this->user;
 	}
 

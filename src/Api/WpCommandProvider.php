@@ -2,8 +2,10 @@
 
 namespace WpProvision\Api;
 
-use
-	WpProvision\Wp;
+use WpProvision\Wp\Core;
+use WpProvision\Wp\Plugin;
+use WpProvision\Wp\Site;
+use WpProvision\Wp\User;
 
 /**
  * Interface WpCommandProvider
@@ -13,22 +15,22 @@ use
 interface WpCommandProvider {
 
 	/**
-	 * @return Wp\Core
+	 * @return Core
 	 */
 	public function core();
 
 	/**
-	 * @return Wp\Plugin
+	 * @return Plugin
 	 */
 	public function plugin();
 
 	/**
-	 * @return Wp\Site
+	 * @return Site
 	 */
 	public function site();
 
 	/**
-	 * @return Wp\User
+	 * @return User
 	 */
 	public function user();
 }

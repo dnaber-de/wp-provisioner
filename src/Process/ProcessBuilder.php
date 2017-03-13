@@ -7,14 +7,14 @@ namespace WpProvision\Process;
  *
  * Interface for Symfony\Components\Process\ProcessBuilder
  *
- * @see Symfony\Component\Process\ProcessBuilder
+ * @see \Symfony\Component\Process\ProcessBuilder
  *
  * @package WpProvision\Process
  */
 interface ProcessBuilder {
 
 	/**
-	 * @see Symfony\Component\Process\ProcessBuilder::create()
+	 * @see \Symfony\Component\Process\ProcessBuilder::create()
 	 *
 	 * @param array $arguments
 	 *
@@ -23,7 +23,7 @@ interface ProcessBuilder {
 	public static function create( array $arguments = [] );
 
 	/**
-	 * @see Symfony\Component\Process\ProcessBuilder::setArguments()
+	 * @see \Symfony\Component\Process\ProcessBuilder::setArguments()
 	 *
 	 * @param array $arguments
 	 *
@@ -32,7 +32,7 @@ interface ProcessBuilder {
 	public function setArguments( array $arguments );
 
 	/**
-	 * @see Symfony\Component\Process\ProcessBuilder::getProcess()
+	 * @see \Symfony\Component\Process\ProcessBuilder::getProcess()
 	 *
 	 * @return Process
 	 *
