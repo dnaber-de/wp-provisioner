@@ -15,7 +15,7 @@ use LogicException;
  *
  * @package WpProvision\Api
  */
-class WpProvisionerLoader implements WpProvisioner {
+final class WpProvisionerLoader implements WpProvisioner {
 
 	const VERSION = 'dev-master';
 

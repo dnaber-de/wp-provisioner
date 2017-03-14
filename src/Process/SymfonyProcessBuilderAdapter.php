@@ -12,6 +12,6 @@ use Symfony\Component\Process\ProcessBuilder as SymfonyProcessBuilder;
  *
  * @package WpProvision\Process
  */
-class SymfonyProcessBuilderAdapter
+final class SymfonyProcessBuilderAdapter
 	extends SymfonyProcessBuilder
 	implements ProcessBuilder {}

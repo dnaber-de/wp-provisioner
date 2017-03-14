@@ -12,7 +12,7 @@ use LogicException;
  *
  * @package WpProvision\Wp
  */
-class WpCliSite implements Site {
+final class WpCliSite implements Site {
 
 	/**
 	 * @var WpCliCommand

@@ -11,6 +11,6 @@ use	Symfony\Component\Process\Process as SymfonyProcess;
  *
  * @package WpProvision\Process
  */
-class SymfonyProcessAdapter
+final class SymfonyProcessAdapter
 	extends SymfonyProcess
 	implements Process {}

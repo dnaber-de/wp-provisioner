@@ -12,7 +12,7 @@ use LogicException;
  *
  * @package WpProvision\Api
  */
-class IsolatedVersions implements Versions {
+final class IsolatedVersions implements Versions {
 
 	/**
 	 * @var array

@@ -16,7 +16,7 @@ use LogicException;
  *
  * @package WpProvision\Command
  */
-class WpCli implements WpCliCommand {
+final class WpCli implements WpCliCommand {
 
 	/**
 	 * @var string

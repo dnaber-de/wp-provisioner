@@ -9,7 +9,7 @@ use WpProvision\Process\ProcessBuilder;
  *
  * @package WpProvision\Env
  */
-class Bash implements Shell {
+final class Bash implements Shell {
 
 	/**
 	 * @var ProcessBuilder

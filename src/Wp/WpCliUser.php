@@ -12,7 +12,7 @@ use InvalidArgumentException;
  *
  * @package WpProvision\Wp
  */
-class WpCliUser implements User {
+final class WpCliUser implements User {
 
 	/**
 	 * @var WpCliCommand

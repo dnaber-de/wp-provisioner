@@ -11,7 +11,7 @@ use Exception;
  *
  * @package WpProvision\Wp
  */
-class WpCliPlugin implements Plugin {
+final class WpCliPlugin implements Plugin {
 
 	/**
 	 * @var WpCliCommand

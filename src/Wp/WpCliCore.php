@@ -12,7 +12,7 @@ use Exception;
  *
  * @package WpProvision\Wp
  */
-class WpCliCore implements Core {
+final class WpCliCore implements Core {
 
 	/**
 	 * @var WpCliCommand

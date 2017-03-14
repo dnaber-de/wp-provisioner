@@ -21,7 +21,7 @@ use WpProvision\Wp\WpCliUser;
  *
  * @package WpProvision\Api
  */
-class WpCliCommandProvider implements WpCommandProvider {
+final class WpCliCommandProvider implements WpCommandProvider {
 
 	/**
 	 * @var WpCliCommand
