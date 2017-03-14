@@ -13,13 +13,13 @@
     ],
     "require": {
         "php": ">= 5.6",
-        "symfony/console": "^2.7",
-        "symfony/process": "^2.1",
-        "inpsyde/wp-cli-site-url": "^2.0",
-        "wp-cli/wp-cli": "^1.1"
+        "symfony/console": "^3.2",
+        "symfony/process": "^3.2"
     },
     "suggest": {
-        "wecodemore/wpstarter": "Easily bootstrap whole site Composer packages for WordPress."
+        "wecodemore/wpstarter": "Easily bootstrap whole site Composer packages for WordPress.",
+        "inpsyde/wp-cli-site-url": "Required: WordPress plugin that enhances WP-CLI",
+        "wp-cli/wp-cli": "Required: WordPress command line interface"
     },
     "require-dev": {
         "inpsyde/monkery-test-case": "^3.0"
