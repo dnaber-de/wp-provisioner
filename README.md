@@ -2,6 +2,12 @@
 
 API to instantiate and manage your WordPress installation structure. 
 
+## Installation
+
+```
+$ composer require dnaber/wp-provisioner:dev-master
+```
+
 ## What & why
 
 Assuming you planning your next web project based on WordPress. The concept of this project requires 15 sites, managed by one WordPress multisite installation. Each site has its own language and a different set of settings and activated plugins and themes. You might want to set up at least a testing server and a production system. Further you have 3 colleagues working with you on this project.
