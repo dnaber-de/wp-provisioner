@@ -10,7 +10,7 @@ namespace WpProvision\Wp;
 interface Db {
 
 	/**
-	 * @return bool
+	 * @return array
 	 */
 	public function check();
 
