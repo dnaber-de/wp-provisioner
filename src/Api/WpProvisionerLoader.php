@@ -17,7 +17,8 @@ use LogicException;
  */
 final class WpProvisionerLoader implements WpProvisioner {
 
-	const VERSION = 'dev-master';
+	const APP_VERSION = 'dev-master';
+	const APP_NAME = 'WP Provisioner';
 
 	/**
 	 * @var string
@@ -70,7 +71,7 @@ final class WpProvisionerLoader implements WpProvisioner {
 			throw new LogicException( "Provision file not exists or is not readable '{$provison_file}'" );
 		}
 
-		$app = new Application( 'WP Provisioner', self::VERSION );
+		$app = new Application( self::APP_NAME, self::APP_VERSION );
 		$app->add( new Provision( $this->versions ) );
 		$this->load_provision_file( $provison_file );
 
