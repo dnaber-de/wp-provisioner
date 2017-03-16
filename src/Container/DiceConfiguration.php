@@ -5,7 +5,6 @@ namespace WpProvision\Container;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 use WpProvision\Api\IsolatedVersions;
-use WpProvision\Api\Versions;
 use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Api\WpCommandProvider;
 use WpProvision\Api\WpProvisionerLoader;
@@ -45,12 +44,13 @@ trait DiceConfiguration {
 	) {
 
 		/**
-		 * Todo: Process builder should only shared inside a single object graph, not globally
+		 * Process builder should only shared inside a single object graph, not globally
 		 */
 		$dice->addRule(
-			SymfonyProcessBuilderAdapter::class,
+			'$symfonyProcessBuilder',
 			[
-				'shared' => true
+				'shared' => true,
+				'instanceOf' => SymfonyProcessBuilderAdapter::class
 			]
 		);
 
@@ -77,7 +77,7 @@ trait DiceConfiguration {
 						}
 					],
 					ProcessBuilder::class => [
-						'instance' => SymfonyProcessBuilderAdapter::class
+						'instance' => '$symfonyProcessBuilder'
 					]
 				],
 				'constructParams' => [ 'wp' ]
