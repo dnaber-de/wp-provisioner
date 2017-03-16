@@ -3,15 +3,18 @@
 namespace WpProvision\App\Command;
 
 use Psr\Container\ContainerInterface;
-use WpProvision\Api\Versions;
+use WpProvision\Api\IsolatedVersions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
+use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Container\Configurator;
-use WpProvision\Container\DiceConfigurable;
+use WpProvision\Exception\Api\TaskFileNotFound;
+use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class Provision
@@ -25,11 +28,6 @@ class Provision extends Command {
 	const COMMAND_NAME = 'provision';
 
 	/**
-	 * @var Versions
-	 */
-	private $versions;
-
-	/**
 	 * @var ContainerInterface
 	 */
 	private $container;
@@ -40,17 +38,14 @@ class Provision extends Command {
 	private $configurator;
 
 	/**
-	 * @param Versions $versions
 	 * @param ContainerInterface $container
 	 * @param Configurator $configurator
 	 */
 	public function __construct(
-		Versions $versions,
 		ContainerInterface $container,
 		Configurator $configurator
 	) {
 
-		$this->versions = $versions;
 		$this->container = $container;
 		$this->configurator = $configurator;
 
@@ -92,13 +87,38 @@ class Provision extends Command {
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
+		$version_api = $this->container->get( IsolatedVersions::class );
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
-		if ( ! $this->versions->versionExists( $version ) ) {
+		if ( ! $version_api->versionExists( $version ) ) {
 			$output->writeln( "<error>Error: no provision for {$version} defined</error>" );
 		}
 
+		$cwd = realpath( getcwd() );
+		// Todo: Make that variable!
+		$provison_file = $cwd . '/provision.php';
+		if ( ! is_readable( $provison_file ) ) {
+			throw new TaskFileNotFound( "File {$provison_file} not found or no readable" );
+		}
+
+		$tasks = require_once $provison_file;
+		if ( ! is_callable( $tasks ) ) {
+			throw new TaskFileReturnsNoCallable( "File {$provison_file}" );
+		}
+
+		// Todo: make that variable
+		$this->container
+			->get( SymfonyProcessBuilderAdapter::class )
+			->setWorkingDirectory( $cwd );
+
+		// Todo: make that variable!
+		$this->configurator->setWpCliExecutable( 'wp' );
+		$tasks(
+			$this->container->get( IsolatedVersions::class ),
+			$this->container->get( WpCliCommandProvider::class )
+		);
+
 		$isolation = (bool) $input->getOption( self::OPTION_ISOLATION );
-		$this->versions->executeProvision( $version, $isolation );
+		$version_api->executeProvision( $version, $isolation );
 
 		return 0;
 	}

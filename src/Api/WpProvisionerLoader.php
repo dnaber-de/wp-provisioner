@@ -18,7 +18,7 @@ use WpProvision\Process\SymfonyProcessBuilderAdapter;
  *
  * @package WpProvision\Api
  */
-final class WpProvisionerLoader implements WpProvisioner {
+class WpProvisionerLoader {
 
 	const APP_VERSION = 'dev-master';
 	const APP_NAME = 'WP Provisioner';
@@ -58,53 +58,12 @@ final class WpProvisionerLoader implements WpProvisioner {
 		$container = new DiceContainer( new Dice() );
 		new DiceConfigurator( $container, $container );
 
-		$this->process_builder = $container->get( SymfonyProcessBuilderAdapter::class );
-		$this->wp_cli = $container->get( WpCli::class );
-		$this->provider = $container->get( WpCliCommandProvider::class );
-		$this->versions = $container->get( IsolatedVersions::class );
-		$cwd = getcwd();
-
-		$provison_file = $cwd . '/provision.php';
-		if ( ! is_readable( $provison_file ) ) {
-			throw new TaskFileNotFound( "File {$provison_file} doesn't exist or isn't readable" );
-		}
-
-		$app = new Application( self::APP_NAME, self::APP_VERSION );
+		$app = $container->get( Application::class );
 		$app->add( $container->get( Provision::class ) );
-		$this->load_provision_file( $provison_file );
 
 		$app->run();
 	}
 
-	/**
-	 * @return Versions
-	 */
-	public function versionList() {
-
-		return $this->versions;
-	}
-
-	/**
-	 * @param $wp_dir
-	 */
-	public function setWpDir( $wp_dir ) {
-
-		$this->process_builder->setWorkingDirectory( realpath( $wp_dir ) );
-	}
-
-	/**
-	 * @deprecated
-	 * @param $file
-	 */
-	private function load_provision_file( $file ) {
-
-		$callable = require $file;
-		if ( ! is_callable( $callable ) ) {
-			throw new TaskFileReturnsNoCallable( "{$file} doesn't return a callable" );
-		}
-
-		return $callable( $this );
-	}
 
 	/**
 	 * Todo: Exclude this

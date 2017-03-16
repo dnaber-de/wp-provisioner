@@ -2,6 +2,9 @@
 
 namespace WpProvision\Api;
 
+/**
+ * @deprecated
+ */
 interface WpProvisioner {
 
 	/**

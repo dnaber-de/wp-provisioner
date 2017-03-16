@@ -3,10 +3,12 @@
 namespace WpProvision\Container;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Application;
 use WpProvision\Api\IsolatedVersions;
 use WpProvision\Api\Versions;
 use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Api\WpCommandProvider;
+use WpProvision\Api\WpProvisionerLoader;
 use WpProvision\App\Command\Provision;
 use WpProvision\Command\WpCli;
 use WpProvision\Command\WpCliCommand;
@@ -49,6 +51,16 @@ trait DiceConfiguration {
 			SymfonyProcessBuilderAdapter::class,
 			[
 				'shared' => true
+			]
+		);
+
+		$dice->addRule(
+			Application::class,
+			[
+				'constructorParams' => [
+					WpProvisionerLoader::APP_NAME,
+					WpProvisionerLoader::APP_VERSION
+				]
 			]
 		);
 
@@ -100,9 +112,6 @@ trait DiceConfiguration {
 			Provision::class,
 			[
 				'substitutions' => [
-					Versions::class => [
-						'instance' => IsolatedVersions::class
-					],
 					ContainerInterface::class => [
 						'instance' => function() use ( $container ) {
 							return $container;
