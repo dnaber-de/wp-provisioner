@@ -7,9 +7,10 @@ use WpProvision\App\Command\Provision;
 use WpProvision\Command\WpCli;
 use WpProvision\Container\DiceConfigurator;
 use WpProvision\Container\DiceContainer;
+use WpProvision\Exception\Api\TaskFileNotFound;
+use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\Process\ProcessBuilder;
 use Symfony\Component\Console\Application;
-use LogicException;
 use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
@@ -64,8 +65,8 @@ final class WpProvisionerLoader implements WpProvisioner {
 		$cwd = getcwd();
 
 		$provison_file = $cwd . '/provision.php';
-		if ( ! file_exists( $provison_file ) || ! is_readable( $provison_file ) ) {
-			throw new LogicException( "Provision file not exists or is not readable '{$provison_file}'" );
+		if ( ! is_readable( $provison_file ) ) {
+			throw new TaskFileNotFound( "File {$provison_file} doesn't exist or isn't readable" );
 		}
 
 		$app = new Application( self::APP_NAME, self::APP_VERSION );
@@ -97,9 +98,12 @@ final class WpProvisionerLoader implements WpProvisioner {
 	 */
 	private function load_provision_file( $file ) {
 
-		$api = $this;
+		$callable = require $file;
+		if ( ! is_callable( $callable ) ) {
+			throw new TaskFileReturnsNoCallable( "{$file} doesn't return a callable" );
+		}
 
-		require $file;
+		return $callable( $this );
 	}
 
 	/**

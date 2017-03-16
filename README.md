@@ -27,55 +27,54 @@ WP Provisioner is a standalone PHP commandline script, that looks for a `provisi
 namespace WpProvision\Api;
 
 /**
- * The variable $api points to an instance of WpProvisioner that gives 
- * you access to the public API
- *
- * @var \WpProvision\Api\WpProvisioner $api
+ * @param \WpProvision\Api\WpProvisioner $api
  */
+return function( WpProvisioner $api ) {
 
-// set the WordPess install directory. This is important for WP-CLI to run properly
-$api->setWpDir( __DIR__ . '/wp' );
+    // set the WordPess install directory. This is important for WP-CLI to run properly
+    $api->setWpDir( __DIR__ . '/wp' );
 
-// add a provision routine named '1.0.0'. The VersionList contains all provision routines for all versions
-$api->versionList()->addProvision(
-	'1.0.0',
-	/**
-	 * The command provider gives you access to all Wp Commands like core, site, user or plugin
-	 *
-	 * @param \WpProvision\Api\WpCommandProvider $provider
-	 */
-	function( $provider ) {
+    // add a provision routine named '1.0.0'. The VersionList contains all provision routines for all versions
+    $api->versionList()->addProvision(
+        '1.0.0',
+        /**
+         * The command provider gives you access to all Wp Commands like core, site, user or plugin
+         *
+         * @param \WpProvision\Api\WpCommandProvider $provider
+         */
+        function( $provider ) {
 
-		$admin_email = 'david@wp-provisioner.tld';
-		$admin_login = 'david';
+            $admin_email = 'david@wp-provisioner.tld';
+            $admin_login = 'david';
 
-		// install a multisite
-		$provider->core()->multisiteInstall(
-			"http://myproject.net",
-			[ 'login' => $admin_login, 'email' => $admin_email ]
-		);
+            // install a multisite
+            $provider->core()->multisiteInstall(
+                "http://myproject.net",
+                [ 'login' => $admin_login, 'email' => $admin_email ]
+            );
 
-		// create some sites
-		$site_1_id = $provider->site()->create(
-			"http://de.myproject.net/",
-			[ 'user_email' => $admin_email ]
-		);
-		$site_2_id = $provider->site()->create(
-			"http://fr.myproject.net/shop/",
-			[ 'user_email' => $admin_email ]
-		);
+            // create some sites
+            $site_1_id = $provider->site()->create(
+                "http://de.myproject.net/",
+                [ 'user_email' => $admin_email ]
+            );
+            $site_2_id = $provider->site()->create(
+                "http://fr.myproject.net/shop/",
+                [ 'user_email' => $admin_email ]
+            );
 
-		// install some plugins (they usually should be as you're using composer, aren't you?)
-		$provider->plugin()->activate(
-			[ 'woocommerce', 'akismet' ],
-			[ 'site_url' => 'http://fr.myproject.net/shop/' ]
-		);
-		$provider->plugin()->activate(
-			'multilingual-press',
-			[ 'network' => TRUE ]
-		);
-	}
-);
+            // install some plugins (they usually should be as you're using composer, aren't you?)
+            $provider->plugin()->activate(
+                [ 'woocommerce', 'akismet' ],
+                [ 'site_url' => 'http://fr.myproject.net/shop/' ]
+            );
+            $provider->plugin()->activate(
+                'multilingual-press',
+                [ 'network' => TRUE ]
+            );
+        }
+    );
+};
 ```
 
 The WP directory depends on your local setup. After installing all dependencies you could simply run `$ vendor/bin/wp-provisioner provision 1.0.0` to run the routines you registered for version `1.0.0` in your `provision.php`.
