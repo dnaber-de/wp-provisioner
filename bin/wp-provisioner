@@ -3,9 +3,11 @@
 
 namespace WpProvision;
 
-$base_dir = dirname( __DIR__ );
+call_user_func( function() {
 
-require_once $base_dir . '/src/Api/WpProvisioner.php';
-require_once $base_dir . '/src/Api/WpProvisionerLoader.php';
+	$base_dir = dirname( __DIR__ );
+	require_once $base_dir . '/src/Api/WpProvisioner.php';
+	require_once $base_dir . '/src/Api/WpProvisionerLoader.php';
 
-$api = new Api\WpProvisionerLoader( $base_dir );
+	new Api\WpProvisionerLoader( $base_dir );
+} );
