@@ -1,0 +1,155 @@
+<?php # -*- coding: utf-8 -*-
+
+namespace WpProvision\Container;
+
+use Psr\Container\ContainerInterface;
+use WpProvision\Api\IsolatedVersions;
+use WpProvision\Api\Versions;
+use WpProvision\Api\WpCliCommandProvider;
+use WpProvision\Api\WpCommandProvider;
+use WpProvision\App\Command\Provision;
+use WpProvision\Command\WpCli;
+use WpProvision\Command\WpCliCommand;
+use WpProvision\Env\Bash;
+use WpProvision\Env\Shell;
+use WpProvision\Env\Windows;
+use WpProvision\Process\ProcessBuilder;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
+use WpProvision\Utils\PasswordGenerator;
+use WpProvision\Utils\Sha1PasswordGenerator;
+use WpProvision\Wp\Db;
+use WpProvision\Wp\Plugin;
+use WpProvision\Wp\Site;
+use WpProvision\Wp\User;
+use WpProvision\Wp\WpCliCore;
+use WpProvision\Wp\WpCliDb;
+use WpProvision\Wp\WpCliPlugin;
+use WpProvision\Wp\WpCliSite;
+use WpProvision\Wp\WpCliUser;
+
+trait DiceConfiguration {
+
+	/**
+	 * @param DiceConfigurable $dice
+	 * @param ContainerInterface $container
+	 * @param Configurator $configurator
+	 *
+	 * @return void
+	 */
+	private function setup(
+		DiceConfigurable $dice,
+		ContainerInterface $container,
+		Configurator $configurator
+	) {
+
+		/**
+		 * Todo: Process builder should only shared inside a single object graph, not globally
+		 */
+		$dice->addRule(
+			SymfonyProcessBuilderAdapter::class,
+			[
+				'shared' => true
+			]
+		);
+
+		$dice->addRule(
+			WpCli::class,
+			[
+				'shared' => true,
+				'substitutions' => [
+					Shell::class => [
+						'instance' => function() {
+							return 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) )
+								? new Windows( new SymfonyProcessBuilderAdapter() )
+								: new Bash( new SymfonyProcessBuilderAdapter() );
+						}
+					],
+					ProcessBuilder::class => [
+						'instance' => SymfonyProcessBuilderAdapter::class
+					]
+				],
+				'constructParams' => [ 'wp' ]
+			]
+		);
+
+		$dice->addRule(
+			IsolatedVersions::class,
+			[
+				'shared' => true,
+				'substitutions' => [
+					WpCommandProvider::class => [
+						'instance' => WpCliCommandProvider::class
+					]
+				]
+			]
+		);
+		$dice->addRule(
+			WpCliCommandProvider::class,
+			[
+				'shared' => true,
+				'substitutions' => [
+					ContainerInterface::class => [
+						'instance' => function() use ( $container ) {
+							return $container;
+						}
+					]
+				]
+			]
+		);
+		$dice->addRule(
+			Provision::class,
+			[
+				'substitutions' => [
+					Versions::class => [
+						'instance' => IsolatedVersions::class
+					],
+					ContainerInterface::class => [
+						'instance' => function() use ( $container ) {
+							return $container;
+						}
+					],
+					Configurator::class => [
+						'instance' => function() use ( $configurator ) {
+							return $configurator;
+						}
+					]
+				]
+			]
+		);
+
+		$commands = [
+			WpCliCore::class,
+			WpCliPlugin::class,
+			WpCliSite::class,
+			WpCliUser::class,
+			WpCliDb::class
+		];
+		foreach ( $commands as $class ) {
+			$dice->addRule(
+				$class,
+				[
+					'substitutions' => [
+						WpCliCommand::class => [
+							'instance' => WpCli::class
+						],
+						User::class => [
+							'instance' => WpCliUser::class
+						],
+						Plugin::class => [
+							'instance' => WpCliPlugin::class
+						],
+						Site::class => [
+							'instance' => WpCliSite::class
+						],
+						Db::class => [
+							'instance' => WpCliDb::class,
+						],
+						PasswordGenerator::class => [
+							'instance' => Sha1PasswordGenerator::class
+						]
+					]
+				]
+			);
+		}
+	}
+}

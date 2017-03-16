@@ -2,13 +2,15 @@
 
 namespace WpProvision\Api;
 
+use Dice\Dice;
 use WpProvision\App\Command\Provision;
 use WpProvision\Command\WpCli;
-use WpProvision\Env\Bash;
+use WpProvision\Container\DiceConfigurator;
+use WpProvision\Container\DiceContainer;
 use WpProvision\Process\ProcessBuilder;
-use WpProvision\Process\SymfonyProcessBuilderAdapter;
 use Symfony\Component\Console\Application;
 use LogicException;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class WpProvisionerLoader
@@ -46,24 +48,19 @@ final class WpProvisionerLoader implements WpProvisioner {
 	private $provider;
 
 	/**
-	 * @param $base_dir
+	 * @param string $base_dir
 	 */
 	public function __construct( $base_dir ) {
 
 		$this->bootstrap( $base_dir );
 
-		$wp_bin_path = $this->vendor_dir . '/bin/wp';
-		if ( ! file_exists( $this->vendor_dir . '/bin/wp' ) ) {
-			throw new LogicException( "WP executable not found in composer bin dir: '{$this->vendor_dir}/bin/wp'" );
-		}
-		$this->process_builder = new SymfonyProcessBuilderAdapter();
-		$this->wp_cli          = new WpCli(
-			new Bash( new SymfonyProcessBuilderAdapter ),
-			$wp_bin_path,
-			$this->process_builder
-		);
-		$this->provider = new WpCliCommandProvider( $this->wp_cli );
-		$this->versions = new IsolatedVersions( $this->provider );
+		$container = new DiceContainer( new Dice() );
+		new DiceConfigurator( $container, $container );
+
+		$this->process_builder = $container->get( SymfonyProcessBuilderAdapter::class );
+		$this->wp_cli = $container->get( WpCli::class );
+		$this->provider = $container->get( WpCliCommandProvider::class );
+		$this->versions = $container->get( IsolatedVersions::class );
 		$cwd = getcwd();
 
 		$provison_file = $cwd . '/provision.php';
@@ -72,7 +69,7 @@ final class WpProvisionerLoader implements WpProvisioner {
 		}
 
 		$app = new Application( self::APP_NAME, self::APP_VERSION );
-		$app->add( new Provision( $this->versions ) );
+		$app->add( $container->get( Provision::class ) );
 		$this->load_provision_file( $provison_file );
 
 		$app->run();
@@ -94,6 +91,10 @@ final class WpProvisionerLoader implements WpProvisioner {
 		$this->process_builder->setWorkingDirectory( realpath( $wp_dir ) );
 	}
 
+	/**
+	 * @deprecated
+	 * @param $file
+	 */
 	private function load_provision_file( $file ) {
 
 		$api = $this;

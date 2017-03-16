@@ -2,8 +2,7 @@
 
 namespace WpProvision\Api;
 
-use WpProvision\Command\WpCliCommand;
-use WpProvision\Utils\Sha1PasswordGenerator;
+use Psr\Container\ContainerInterface;
 use WpProvision\Wp\Core;
 use WpProvision\Wp\Plugin;
 use WpProvision\Wp\Site;
@@ -24,28 +23,26 @@ use WpProvision\Wp\WpCliUser;
 final class WpCliCommandProvider implements WpCommandProvider {
 
 	/**
-	 * @var WpCliCommand
+	 * @var WpCliCore
 	 */
-	private $wp_cli;
+	private $container;
 
 	private $core;
 	private $plugin;
 	private $site;
 	private $user;
 
-	public function __construct( WpCliCommand $wp_cli ) {
+	public function __construct( ContainerInterface $container ) {
 
-		$this->wp_cli = $wp_cli;
-		$this->core = new WpCliCore( $wp_cli, new Sha1PasswordGenerator() );
-		$this->plugin = new WpCliPlugin( $wp_cli );
-		$this->user = new WpCliUser( $wp_cli );
-		$this->site = new WpCliSite( $wp_cli, $this->user, $this->plugin );
+		$this->container = $container;
 	}
 
 	/**
 	 * @return Core
 	 */
 	public function core() {
+
+		$this->core or $this->core = $this->container->get( WpCliCore::class );
 
 		return $this->core;
 	}
@@ -55,6 +52,8 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	 */
 	public function plugin() {
 
+		$this->plugin or $this->plugin = $this->container->get( WpCliPlugin::class );
+
 		return $this->plugin;
 	}
 
@@ -63,6 +62,8 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	 */
 	public function site() {
 
+		$this->site or $this->site = $this->container->get( WpCliSite::class );
+
 		return $this->site;
 	}
 
@@ -70,6 +71,8 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	 * @return User
 	 */
 	public function user() {
+
+		$this->user or $this->user = $this->container->get( WpCliUser::class );
 
 		return $this->user;
 	}

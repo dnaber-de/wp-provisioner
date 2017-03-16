@@ -2,6 +2,7 @@
 
 namespace WpProvision\App\Command;
 
+use Psr\Container\ContainerInterface;
 use WpProvision\Api\Versions;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,16 +10,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
+use WpProvision\Container\Configurator;
+use WpProvision\Container\DiceConfigurable;
 
 /**
  * Class Provision
  *
  * @package WpProvision\App\Command
  */
-class Provision extends Command  {
+class Provision extends Command {
 
 	const ARGUMENT_VERSION = 'version';
 	const OPTION_ISOLATION = 'isolation';
+	const COMMAND_NAME = 'provision';
 
 	/**
 	 * @var Versions
@@ -26,13 +30,31 @@ class Provision extends Command  {
 	private $versions;
 
 	/**
-	 * @param Versions $versions
-	 * @param string       $name
+	 * @var ContainerInterface
 	 */
-	public function __construct( Versions $versions, $name = NULL ) {
+	private $container;
+
+	/**
+	 * @var Configurator
+	 */
+	private $configurator;
+
+	/**
+	 * @param Versions $versions
+	 * @param ContainerInterface $container
+	 * @param Configurator $configurator
+	 */
+	public function __construct(
+		Versions $versions,
+		ContainerInterface $container,
+		Configurator $configurator
+	) {
 
 		$this->versions = $versions;
-		parent::__construct( $name );
+		$this->container = $container;
+		$this->configurator = $configurator;
+
+		parent::__construct();
 	}
 
 	/**
@@ -41,7 +63,7 @@ class Provision extends Command  {
 	protected function configure() {
 
 		$this
-			->setName( 'provision' )
+			->setName( self::COMMAND_NAME )
 			->setDescription( 'Runs the provision routines of a given version' )
 			->addArgument( self::ARGUMENT_VERSION, InputArgument::REQUIRED, 'The version to run provisions for' )
 			->addOption(
