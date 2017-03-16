@@ -89,9 +89,7 @@ class Provision extends Command {
 
 		$version_api = $this->container->get( IsolatedVersions::class );
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
-		if ( ! $version_api->versionExists( $version ) ) {
-			$output->writeln( "<error>Error: no provision for {$version} defined</error>" );
-		}
+
 
 		$cwd = realpath( getcwd() );
 		// Todo: Make that variable!
@@ -116,6 +114,10 @@ class Provision extends Command {
 			$this->container->get( IsolatedVersions::class ),
 			$this->container->get( WpCliCommandProvider::class )
 		);
+		if ( ! $version_api->versionExists( $version ) ) {
+			$output->writeln( "<error>Error: no provision for {$version} defined</error>" );
+			return 1;
+		}
 
 		$isolation = (bool) $input->getOption( self::OPTION_ISOLATION );
 		$version_api->executeProvision( $version, $isolation );
