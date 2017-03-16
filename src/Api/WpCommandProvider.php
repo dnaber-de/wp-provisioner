@@ -2,6 +2,7 @@
 
 namespace WpProvision\Api;
 
+use WpProvision\Wp\Cli;
 use WpProvision\Wp\Core;
 use WpProvision\Wp\Plugin;
 use WpProvision\Wp\Site;
@@ -13,6 +14,11 @@ use WpProvision\Wp\User;
  * @package WpProvision\Api
  */
 interface WpCommandProvider {
+
+	/**
+	 * @return Cli
+	 */
+	public function cli();
 
 	/**
 	 * @return Core

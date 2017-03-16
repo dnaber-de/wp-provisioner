@@ -22,6 +22,7 @@ use WpProvision\Wp\Db;
 use WpProvision\Wp\Plugin;
 use WpProvision\Wp\Site;
 use WpProvision\Wp\User;
+use WpProvision\Wp\WpCliCli;
 use WpProvision\Wp\WpCliCore;
 use WpProvision\Wp\WpCliDb;
 use WpProvision\Wp\WpCliPlugin;
@@ -127,6 +128,7 @@ trait DiceConfiguration {
 		);
 
 		$commands = [
+			WpCliCli::class,
 			WpCliCore::class,
 			WpCliPlugin::class,
 			WpCliSite::class,

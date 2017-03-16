@@ -3,10 +3,12 @@
 namespace WpProvision\Api;
 
 use Psr\Container\ContainerInterface;
+use WpProvision\Wp\Cli;
 use WpProvision\Wp\Core;
 use WpProvision\Wp\Plugin;
 use WpProvision\Wp\Site;
 use WpProvision\Wp\User;
+use WpProvision\Wp\WpCliCli;
 use WpProvision\Wp\WpCliCore;
 use WpProvision\Wp\WpCliPlugin;
 use WpProvision\Wp\WpCliSite;
@@ -27,6 +29,7 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	 */
 	private $container;
 
+	private $cli;
 	private $core;
 	private $plugin;
 	private $site;
@@ -35,6 +38,16 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	public function __construct( ContainerInterface $container ) {
 
 		$this->container = $container;
+	}
+
+	/**
+	 * @return Cli
+	 */
+	public function cli() {
+
+		$this->cli or $this->cli = $this->container->get( WpCliCli::class );
+
+		return $this->cli;
 	}
 
 	/**
