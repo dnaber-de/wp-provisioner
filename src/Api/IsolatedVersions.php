@@ -54,7 +54,7 @@ final class IsolatedVersions implements Versions {
 			throw new LogicException( "No provisioner registered for version '{$version}''" );
 		}
 
-		call_user_func_array( $this->versions[ $version ], [ $this->provider ] );
+		return (bool) call_user_func_array( $this->versions[ $version ], [ $this->provider ] );
 	}
 
 	/**
