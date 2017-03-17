@@ -10,7 +10,7 @@ namespace WpProvision\Container;
 interface Configurator {
 
 	/**
-	 * @param string $file
+	 * @param void
 	 */
-	public function setWpCliExecutable( $file );
+	public function setup();
 }

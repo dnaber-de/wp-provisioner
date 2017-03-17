@@ -20,24 +20,36 @@ final class DiceConfigurator implements Configurator {
 	private $dice;
 
 	/**
+	 * @var ContainerInterface
+	 */
+	private $container;
+
+	/**
+	 * @var bool
+	 */
+	private $loaded = false;
+
+	/**
 	 * @param DiceConfigurable $dice
+	 * @param ContainerInterface $container
 	 */
 	public function __construct( DiceConfigurable $dice, ContainerInterface $container ) {
 
 		$this->dice = $dice;
-		$this->setup( $dice, $container, $this );
+		$this->container = $container;
 	}
 
 	/**
-	 * @param string $file
+	 * @param void
 	 */
-	public function setWpCliExecutable( $file ) {
+	public function setup() {
 
-		$this->dice->addRule(
-			WpCli::class,
-			[
-				'constructParameters' => [ $file ]
-			]
-		);
+		if ( $this->loaded ) {
+			return;
+		}
+
+		$this->setup_dice( $this->dice, $this->container );
+		$this->loaded = true;
 	}
+
 }

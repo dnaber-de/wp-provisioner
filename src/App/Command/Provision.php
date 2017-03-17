@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
 use WpProvision\Api\WpCliCommandProvider;
-use WpProvision\Container\Configurator;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\Process\SymfonyProcessBuilderAdapter;
@@ -33,21 +32,13 @@ class Provision extends Command {
 	private $container;
 
 	/**
-	 * @var Configurator
-	 */
-	private $configurator;
-
-	/**
 	 * @param ContainerInterface $container
-	 * @param Configurator $configurator
 	 */
 	public function __construct(
-		ContainerInterface $container,
-		Configurator $configurator
+		ContainerInterface $container
 	) {
 
 		$this->container = $container;
-		$this->configurator = $configurator;
 
 		parent::__construct();
 	}
@@ -108,8 +99,7 @@ class Provision extends Command {
 			->get( SymfonyProcessBuilderAdapter::class )
 			->setWorkingDirectory( $cwd );
 
-		// Todo: make that variable!
-		$this->configurator->setWpCliExecutable( 'wp' );
+		//Todo make WP CLI binary variable
 		$tasks(
 			$this->container->get( IsolatedVersions::class ),
 			$this->container->get( WpCliCommandProvider::class )

@@ -38,10 +38,9 @@ trait DiceConfiguration {
 	 *
 	 * @return void
 	 */
-	private function setup(
+	private function setup_dice(
 		DiceConfigurable $dice,
-		ContainerInterface $container,
-		Configurator $configurator
+		ContainerInterface $container
 	) {
 
 		/**
@@ -116,11 +115,6 @@ trait DiceConfiguration {
 					ContainerInterface::class => [
 						'instance' => function() use ( $container ) {
 							return $container;
-						}
-					],
-					Configurator::class => [
-						'instance' => function() use ( $configurator ) {
-							return $configurator;
 						}
 					]
 				]

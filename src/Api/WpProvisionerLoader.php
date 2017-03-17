@@ -56,7 +56,7 @@ class WpProvisionerLoader {
 		$this->bootstrap( $base_dir );
 
 		$container = new DiceContainer( new Dice() );
-		new DiceConfigurator( $container, $container );
+		( new DiceConfigurator( $container, $container ) )-> setup();
 
 		$app = $container->get( Application::class );
 		$app->add( $container->get( Provision::class ) );
