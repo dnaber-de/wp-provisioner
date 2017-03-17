@@ -48,4 +48,31 @@ interface ProcessBuilder {
 	 * @return ProcessBuilder
 	 */
 	public function setWorkingDirectory( $cwd );
+
+	/**
+	 * @param array $prefix
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function setPrefix( array $prefix );
+
+	/**
+	 * MUST return a new instance of process builder instead of
+	 * changing state of the current one.
+	 *
+	 * @param $cwd
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function withWorkingDirectory( $cwd );
+
+	/**
+	 * MUST return a new instance of process builder instead of
+	 * changing state of the current one.
+	 *
+	 * @param array $prefix
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function withPrefix( array $prefix );
 }
