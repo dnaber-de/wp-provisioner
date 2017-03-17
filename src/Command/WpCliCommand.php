@@ -10,4 +10,19 @@ namespace WpProvision\Command;
  *
  * @package WpProvision\Command
  */
-interface WpCliCommand extends BaseCommand {}
+interface WpCliCommand extends BaseCommand {
+
+	/**
+	 * @param string $dir
+	 *
+	 * @return void
+	 */
+	public function setWpInstallDir( $dir );
+
+	/**
+	 * @param string $file
+	 *
+	 * @return void
+	 */
+	public function setWpCliBinary( $file );
+}

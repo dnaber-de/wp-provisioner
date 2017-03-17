@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
 use WpProvision\Api\SymfonyOutputAdapter;
 use WpProvision\Api\WpCliCommandProvider;
+use WpProvision\Command\WpCli;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\Process\SymfonyProcessBuilderAdapter;

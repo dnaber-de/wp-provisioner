@@ -17,6 +17,18 @@ final class SymfonyProcessBuilderAdapter
 	implements ProcessBuilder {
 
 	/**
+	 * @param string|array $prefix
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function setPrefix( $prefix ) {
+
+		parent::setPrefix( $prefix );
+
+		return $this;
+	}
+
+	/**
 	 * MUST return a new instance of process builder instead of
 	 * changing state of the current one.
 	 *
@@ -36,11 +48,11 @@ final class SymfonyProcessBuilderAdapter
 	 * MUST return a new instance of process builder instead of
 	 * changing state of the current one.
 	 *
-	 * @param array $prefix
+	 * @param string|array $prefix
 	 *
 	 * @return ProcessBuilder
 	 */
-	public function withPrefix( array $prefix ) {
+	public function withPrefix( $prefix ) {
 
 		$process_builder = clone $this;
 		$process_builder->setPrefix( $prefix );

@@ -24,11 +24,6 @@ final class WpCli implements WpCliCommand {
 	private $base;
 
 	/**
-	 * @var string
-	 */
-	private $bin_path;
-
-	/**
 	 * @var Shell
 	 */
 	private $shell;
@@ -40,37 +35,16 @@ final class WpCli implements WpCliCommand {
 
 	/**
 	 * @param Shell $shell
-	 * @param string $bin_path
 	 * @param ProcessBuilder $process_builder
 	 */
 	public function __construct(
 		Shell $shell,
-		$bin_path = '',
-		ProcessBuilder $process_builder = NULL
+		ProcessBuilder $process_builder
 	) {
 
-		/**
-		 * Todo: remove this. We should rely only on paths to binaries provided by composer
-		 * and not on global installed versions of WP-CLI.
-		 */
 		$this->shell = $shell;
-		if ( $bin_path ) {
-			$this->bin_path = realpath( $bin_path );
-			$this->base = $bin_path;
-		} else {
-			$this->base = 'wp';
-		}
-
-		if ( ! $process_builder ) {
-			$process_builder = new SymfonyProcessBuilderAdapter();
-		}
-		$this->process_builder = $process_builder;
-
-		/**
-		 * This sucks as we cannot know if the process builder is used elsewhere.
-		 * Not sure if we should clone the object here or if we need an object-builder builder.
-		 */
-		$this->process_builder->setPrefix( $this->base() );
+		$this->base = 'wp';
+		$this->process_builder = $process_builder->withPrefix( [ $this->base ] );
 	}
 
 	/**
@@ -86,11 +60,27 @@ final class WpCli implements WpCliCommand {
 	 */
 	public function commandExists() {
 
-		if ( $this->bin_path ) {
-			return $this->shell->isExecutable( $this->bin_path );
-		}
-
 		return $this->shell->commandExists( $this->base );
+	}
+
+	/**
+	 * @param string $dir
+	 *
+	 * @return void
+	 */
+	public function setWpInstallDir( $dir ) {
+
+		$this->process_builder = $this->process_builder->withWorkingDirectory( [ $dir ] );
+	}
+
+	/**
+	 * @param string $file
+	 *
+	 * @return void
+	 */
+	public function setWpCliBinary( $file ) {
+
+		$this->process_builder = $this->process_builder->withPrefix( [ $file ] );
 	}
 
 	/**
