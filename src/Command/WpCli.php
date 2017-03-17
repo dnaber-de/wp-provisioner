@@ -70,7 +70,7 @@ final class WpCli implements WpCliCommand {
 	 */
 	public function setWpInstallDir( $dir ) {
 
-		$this->process_builder = $this->process_builder->withWorkingDirectory( [ $dir ] );
+		$this->process_builder = $this->process_builder->withWorkingDirectory( $dir );
 	}
 
 	/**

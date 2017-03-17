@@ -13,8 +13,11 @@ use LogicException;
 use WpProvision\Api\SymfonyOutputAdapter;
 use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Command\WpCli;
+use WpProvision\Command\WpCliCommand;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
+use WpProvision\Exception\App\Argument\WpCliNotExecutable;
+use WpProvision\Exception\App\Argument\WpDirectoryNotFound;
 use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
@@ -24,9 +27,14 @@ use WpProvision\Process\SymfonyProcessBuilderAdapter;
  */
 class Provision extends Command {
 
-	const ARGUMENT_VERSION = 'version';
-	const OPTION_ISOLATION = 'isolation';
 	const COMMAND_NAME = 'provision';
+
+	const ARGUMENT_VERSION = 'version';
+
+	const OPTION_ISOLATION = 'isolation';
+	const OPTION_WP_DIR = 'wp-dir';
+	const OPTION_TASK_FILE = 'file';
+	const OPTION_WP_CLI = 'wp-cli';
 
 	/**
 	 * @var ContainerInterface
@@ -60,6 +68,27 @@ class Provision extends Command {
 				InputOption::VALUE_OPTIONAL,
 				'Skip all version provisioning routines prior the given version',
 				FALSE
+			)
+			->addOption(
+				self::OPTION_WP_DIR,
+				'w',
+				InputOption::VALUE_OPTIONAL,
+				'WP install directory',
+				NULL
+			)
+			->addOption(
+				self::OPTION_TASK_FILE,
+				'f',
+				InputOption::VALUE_OPTIONAL,
+				'Task file that defines the version',
+				NULL
+			)
+			->addOption(
+				self::OPTION_WP_CLI,
+				NULL,
+				InputOption::VALUE_OPTIONAL,
+				'Path to WP-CLI executable',
+				'wp'
 			);
 	}
 
@@ -82,26 +111,26 @@ class Provision extends Command {
 
 		$version_api = $this->container->get( IsolatedVersions::class );
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
+		/* @var WpCliCommand $wp_cli */
+		$wp_cli = $this->container->get( WpCli::class );
 
+		$wp_cli->setWpInstallDir( $this->getWpDir( $input ) );
+		$wp_cli->setWpCliBinary( $this->getWpCliBinary( $input ) );
 
-		$cwd = realpath( getcwd() );
-		// Todo: Make that variable!
-		$provison_file = $cwd . '/provision.php';
-		if ( ! is_readable( $provison_file ) ) {
-			throw new TaskFileNotFound( "File {$provison_file} not found or no readable" );
+		if ( ! $wp_cli->commandExists() ) {
+			throw new WpCliNotExecutable( "Command: {$this->getWpCliBinary( $input )}");
 		}
 
-		$tasks = require_once $provison_file;
+		$task_file = $this->getTaskFile( $input );
+		if ( ! is_readable( $task_file ) ) {
+			throw new TaskFileNotFound( "File {$task_file} not found or no readable" );
+		}
+
+		$tasks = require_once $task_file;
 		if ( ! is_callable( $tasks ) ) {
-			throw new TaskFileReturnsNoCallable( "File {$provison_file}" );
+			throw new TaskFileReturnsNoCallable( "File {$task_file}" );
 		}
 
-		// Todo: make that variable
-		$this->container
-			->get( SymfonyProcessBuilderAdapter::class )
-			->setWorkingDirectory( $cwd );
-
-		//Todo make WP CLI binary variable
 		$tasks(
 			$this->container->get( IsolatedVersions::class ),
 			$this->container->get( WpCliCommandProvider::class ),
@@ -118,4 +147,56 @@ class Provision extends Command {
 		return 0;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 *
+	 * @return string
+	 */
+	private function getWpDir( InputInterface $input ) {
+
+		$wp_dir = $input->getOption( self::OPTION_WP_DIR );
+		$wp_dir and $wp_dir = realpath( $wp_dir );
+		$wp_dir or $wp_dir = getcwd();
+
+		if ( ! is_string( $wp_dir ) || ! is_dir( $wp_dir ) ) {
+			throw new WpDirectoryNotFound();
+		}
+
+		return $wp_dir;
+	}
+
+	/**
+	 * @param InputInterface $input
+	 *
+	 * @return string
+	 */
+	private function getTaskFile( InputInterface $input ) {
+
+		$file = $input->getOption( self::OPTION_TASK_FILE );
+		if ( $file && ! is_readable( $file ) ) {
+			throw new TaskFileNotFound( "File: {$file}");
+		}
+
+		if ( ! $file ) {
+			$wd = getcwd();
+			$wd and $file = "{$wd}/provision.php";
+		}
+		if ( ! $file && ! is_readable( $file ) ) {
+			throw new TaskFileNotFound( "File: {$file}" );
+		}
+
+		return $file;
+	}
+
+	/**
+	 * @param InputInterface $input
+	 *
+	 * @return string
+	 */
+	private function getWpCliBinary( InputInterface $input ) {
+
+		$wp = $input->getOption( self::OPTION_WP_CLI );
+
+		return $wp;
+	}
 }

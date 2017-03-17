@@ -32,14 +32,14 @@ final class SymfonyProcessBuilderAdapter
 	 * MUST return a new instance of process builder instead of
 	 * changing state of the current one.
 	 *
-	 * @param $cwd
+	 * @param string $cwd
 	 *
 	 * @return ProcessBuilder
 	 */
 	public function withWorkingDirectory( $cwd ) {
 
 		$process_builder = clone $this;
-		$process_builder->setWorkingDirectory( $cwd );
+		$process_builder->setWorkingDirectory( (string) $cwd );
 
 		return $process_builder;
 	}

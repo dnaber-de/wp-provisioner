@@ -60,7 +60,7 @@ interface ProcessBuilder {
 	 * MUST return a new instance of process builder instead of
 	 * changing state of the current one.
 	 *
-	 * @param $cwd
+	 * @param string $cwd
 	 *
 	 * @return ProcessBuilder
 	 */
