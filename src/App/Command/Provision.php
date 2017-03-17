@@ -118,7 +118,7 @@ class Provision extends Command {
 		$wp_cli->setWpCliBinary( $this->getWpCliBinary( $input ) );
 
 		if ( ! $wp_cli->commandExists() ) {
-			throw new WpCliNotExecutable( "Command: {$this->getWpCliBinary( $input )}");
+			throw new WpCliNotExecutable( "Command: {$wp_cli->base()}");
 		}
 
 		$task_file = $this->getTaskFile( $input );

@@ -81,6 +81,7 @@ final class WpCli implements WpCliCommand {
 	public function setWpCliBinary( $file ) {
 
 		$this->process_builder = $this->process_builder->withPrefix( [ $file ] );
+		$this->base = $file;
 	}
 
 	/**
