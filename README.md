@@ -1,6 +1,6 @@
 # WP Provisioner
 
-API to instantiate and manage your WordPress installation structure.
+API to instantiate and manage your WordPress installation structure. *Work in progress*
 
 ## Installation
 
@@ -19,7 +19,17 @@ Thus, you set up your local development system, create the 15 sites and make all
  * Do it programmatic using WP Provisioner
 
 ## How it works
-WP Provisioner is a standalone PHP commandline script, that looks for a `provisioner.php` in your working directory (mostly in your project directory). It uses WP-CLI as API to your WordPress application. The following example shows how to install WP multisite and create some sites and activate some plugins:
+WP Provisioner is a standalone PHP commandline script that executes a set of tasks defined in a separate PHP file. Right now it provides two commands to do this.
+
+### provision
+
+```
+$ vendor/bin/wp-provisioner provision <VERSION> [--file <PROVISION_FILE>] [--wp-dir <WP_DIR>] [--wp_cli <WP_CLI>]
+```
+
+This command executes the `<VERSION>` defined in `<PROVISION_FILE>`. By default, the provision file is the `provision.php` in your current working directory.
+
+Here's an example provision file that defines version `1.0.0` and installs a multisite, sets up two sites and activates two plugins:
 
 ```php
 <?php # -*- coding: utf-8 -*-
@@ -73,7 +83,12 @@ return function( Versions $versions, WpCommandProvider $wp, ConsoleOutput $outpu
 };
 ```
 
-The WP directory depends on your local setup. After installing all dependencies you could simply run `$ vendor/bin/wp-provisioner provision 1.0.0` to run the routines you registered for version `1.0.0` in your `provision.php`.
+### task
+
+```
+$ vendor/bin/wp-provisioner task tasks.php [--wp-dir <WP_DIR>] [--wp_cli <WP_CLI>]
+```
+
 
 ## Goal
 The idea of this tool is to automate the process of configuring WordPress as complete as possible to integrate it into already automated deployment processes. However, it is in a early _alpha_ state. Some features are not implemented jet and the API might change slightly.

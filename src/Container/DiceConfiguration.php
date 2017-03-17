@@ -9,6 +9,7 @@ use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Api\WpCommandProvider;
 use WpProvision\Api\WpProvisionerLoader;
 use WpProvision\App\Command\Provision;
+use WpProvision\App\Command\Task;
 use WpProvision\Command\WpCli;
 use WpProvision\Command\WpCliCommand;
 use WpProvision\Env\Bash;
@@ -34,7 +35,6 @@ trait DiceConfiguration {
 	/**
 	 * @param DiceConfigurable $dice
 	 * @param ContainerInterface $container
-	 * @param Configurator $configurator
 	 *
 	 * @return void
 	 */
@@ -110,6 +110,18 @@ trait DiceConfiguration {
 		);
 		$dice->addRule(
 			Provision::class,
+			[
+				'substitutions' => [
+					ContainerInterface::class => [
+						'instance' => function() use ( $container ) {
+							return $container;
+						}
+					]
+				]
+			]
+		);
+		$dice->addRule(
+			Task::class,
 			[
 				'substitutions' => [
 					ContainerInterface::class => [

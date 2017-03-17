@@ -18,7 +18,6 @@ use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\Exception\App\Argument\WpCliNotExecutable;
 use WpProvision\Exception\App\Argument\WpDirectoryNotFound;
-use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class Provision

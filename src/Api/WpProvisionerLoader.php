@@ -4,6 +4,7 @@ namespace WpProvision\Api;
 
 use Dice\Dice;
 use WpProvision\App\Command\Provision;
+use WpProvision\App\Command\Task;
 use WpProvision\Command\WpCli;
 use WpProvision\Container\DiceConfigurator;
 use WpProvision\Container\DiceContainer;
@@ -60,6 +61,7 @@ class WpProvisionerLoader {
 
 		$app = $container->get( Application::class );
 		$app->add( $container->get( Provision::class ) );
+		$app->add( $container->get( Task::class ) );
 
 		$app->run();
 	}
