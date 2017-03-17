@@ -1,6 +1,6 @@
 # WP Provisioner
 
-API to instantiate and manage your WordPress installation structure. 
+API to instantiate and manage your WordPress installation structure.
 
 ## Installation
 
@@ -28,50 +28,46 @@ namespace WpProvision\Api;
 
 /**
  * @param \WpProvision\Api\WpProvisioner $api
+ * @param \WpProvision\Api\WpCommandProvider $wp
+ * @param \WpProvision\Api\ConsoleOutput $output
  */
-return function( WpProvisioner $api ) {
-
-    // set the WordPess install directory. This is important for WP-CLI to run properly
-    $api->setWpDir( __DIR__ . '/wp' );
+return function( Versions $versions, WpCommandProvider $wp, ConsoleOutput $output ) {
 
     // add a provision routine named '1.0.0'. The VersionList contains all provision routines for all versions
-    $api->versionList()->addProvision(
+    $versions->addProvision(
         '1.0.0',
-        /**
-         * The command provider gives you access to all Wp Commands like core, site, user or plugin
-         *
-         * @param \WpProvision\Api\WpCommandProvider $provider
-         */
-        function( $provider ) {
+        function() use ( $wp, $output ) {
 
             $admin_email = 'david@wp-provisioner.tld';
             $admin_login = 'david';
 
             // install a multisite
-            $provider->core()->multisiteInstall(
+            $wp->core()->multisiteInstall(
                 "http://myproject.net",
                 [ 'login' => $admin_login, 'email' => $admin_email ]
             );
 
             // create some sites
-            $site_1_id = $provider->site()->create(
+            $site_1_id = $wp->site()->create(
                 "http://de.myproject.net/",
                 [ 'user_email' => $admin_email ]
             );
-            $site_2_id = $provider->site()->create(
+            $site_2_id = $wp->site()->create(
                 "http://fr.myproject.net/shop/",
                 [ 'user_email' => $admin_email ]
             );
 
             // install some plugins (they usually should be as you're using composer, aren't you?)
-            $provider->plugin()->activate(
+            $wp->plugin()->activate(
                 [ 'woocommerce', 'akismet' ],
                 [ 'site_url' => 'http://fr.myproject.net/shop/' ]
             );
-            $provider->plugin()->activate(
+            $wp->plugin()->activate(
                 'multilingual-press',
                 [ 'network' => TRUE ]
             );
+
+            $output->writeln( "Successfully set up version 1.0.0" );
         }
     );
 };

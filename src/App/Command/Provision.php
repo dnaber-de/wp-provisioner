@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
+use WpProvision\Api\SymfonyOutputAdapter;
 use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
@@ -102,7 +103,8 @@ class Provision extends Command {
 		//Todo make WP CLI binary variable
 		$tasks(
 			$this->container->get( IsolatedVersions::class ),
-			$this->container->get( WpCliCommandProvider::class )
+			$this->container->get( WpCliCommandProvider::class ),
+			new SymfonyOutputAdapter( $output )
 		);
 		if ( ! $version_api->versionExists( $version ) ) {
 			$output->writeln( "<error>Error: no provision for {$version} defined</error>" );
