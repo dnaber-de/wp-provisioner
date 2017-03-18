@@ -31,6 +31,7 @@ final class Bash implements Shell {
 	 */
 	public function commandExists( $command ) {
 
+		// Todo: Use more poratble `command -v` see http://stackoverflow.com/a/4785518/2169046
 		$process = $this
 			->processBuilder
 			->setArguments(

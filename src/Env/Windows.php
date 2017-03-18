@@ -30,7 +30,8 @@ final class Windows implements Shell {
 	 * @return bool
 	 */
 	public function commandExists( $command ) {
-		// TODO: Implement commandExists() method.
+
+		//Todo: use `where $command`, see http://stackoverflow.com/a/18540185/2169046
 	}
 
 	/**
