@@ -62,4 +62,14 @@ final class Bash implements Shell {
 		return file_exists( $file ) && is_executable( $file );
 	}
 
+	/**
+	 * @param $file
+	 *
+	 * @return bool
+	 */
+	public function isReadable( $file ) {
+
+		return is_readable( $file );
+	}
+
 }

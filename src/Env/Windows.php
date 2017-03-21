@@ -45,4 +45,14 @@ final class Windows implements Shell {
 		// TODO: Implement isExecutable() method.
 	}
 
+
+	/**
+	 * @param $file
+	 *
+	 * @return bool
+	 */
+	public function isReadable( $file ) {
+
+		return is_readable( $file );
+	}
 }

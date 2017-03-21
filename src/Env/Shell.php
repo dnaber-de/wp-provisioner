@@ -24,4 +24,11 @@ interface Shell {
 	 * @return bool
 	 */
 	public function isExecutable( $file );
+
+	/**
+	 * @param $file
+	 *
+	 * @return bool
+	 */
+	public function isReadable( $file );
 }
