@@ -2,7 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use WpProvision\Command\WpCliCommand;
+use WpProvision\Command\Command;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
@@ -15,7 +15,7 @@ use LogicException;
 final class WpCliSite implements Site {
 
 	/**
-	 * @var WpCliCommand
+	 * @var Command
 	 */
 	private $wp_cli;
 
@@ -30,11 +30,11 @@ final class WpCliSite implements Site {
 	private $plugin;
 
 	/**
-	 * @param WpCliCommand $wp_cli
+	 * @param Command $wp_cli
 	 * @param User $user
 	 * @param Plugin $plugin
 	 */
-	public function __construct( WpCliCommand $wp_cli, User $user, Plugin $plugin ) {
+	public function __construct( Command $wp_cli, User $user, Plugin $plugin ) {
 
 		$this->wp_cli = $wp_cli;
 		$this->user   = $user;

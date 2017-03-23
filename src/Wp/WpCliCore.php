@@ -2,7 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use WpProvision\Command\WpCliCommand;
+use WpProvision\Command\Command;
 use WpProvision\Utils\PasswordGenerator;
 use InvalidArgumentException;
 use Exception;
@@ -15,7 +15,7 @@ use Exception;
 final class WpCliCore implements Core {
 
 	/**
-	 * @var WpCliCommand
+	 * @var Command
 	 */
 	private $wp_cli;
 
@@ -25,10 +25,10 @@ final class WpCliCore implements Core {
 	private $pw_generator;
 
 	/**
-	 * @param WpCliCommand $wp_cli
+	 * @param Command $wp_cli
 	 * @param PasswordGenerator $pw_generator
 	 */
-	public function __construct( WpCliCommand $wp_cli, PasswordGenerator $pw_generator ) {
+	public function __construct( Command $wp_cli, PasswordGenerator $pw_generator ) {
 
 		$this->wp_cli       = $wp_cli;
 		$this->pw_generator = $pw_generator;

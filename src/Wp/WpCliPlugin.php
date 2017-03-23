@@ -2,7 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use WpProvision\Command\WpCliCommand;
+use WpProvision\Command\Command;
 use InvalidArgumentException;
 use Exception;
 
@@ -14,14 +14,14 @@ use Exception;
 final class WpCliPlugin implements Plugin {
 
 	/**
-	 * @var WpCliCommand
+	 * @var Command
 	 */
 	private $wp_cli;
 
 	/**
-	 * @param WpCliCommand $wp_cli
+	 * @param Command $wp_cli
 	 */
-	public function __construct( WpCliCommand $wp_cli ) {
+	public function __construct( Command $wp_cli ) {
 
 		$this->wp_cli = $wp_cli;
 	}

@@ -2,8 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use WpProvision\Command\WpCliCommand;
-use Exception;
+use WpProvision\Command\Command;
 
 /**
  * Class WpCliDb
@@ -13,14 +12,14 @@ use Exception;
 final class WpCliDb implements Db {
 
 	/**
-	 * @var WpCliCommand
+	 * @var Command
 	 */
 	private $wp_cli;
 
 	/**
-	 * @param WpCliCommand $wp_cli
+	 * @param Command $wp_cli
 	 */
-	public function __construct( WpCliCommand $wp_cli ) {
+	public function __construct( Command $wp_cli ) {
 
 		$this->wp_cli = $wp_cli;
 	}
