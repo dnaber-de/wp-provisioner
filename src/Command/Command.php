@@ -3,23 +3,13 @@
 namespace WpProvision\Command;
 
 /**
- * Interface BaseCommand
+ * Interface Command
  *
  * Wraps a command (like `$ wp`) so you have to deal only with the arguments
  *
  * @package WpProvision\Command
  */
-interface BaseCommand {
-
-	/**
-	 * @return string
-	 */
-	public function base();
-
-	/**
-	 * @return bool
-	 */
-	public function commandExists();
+interface Command {
 
 	/**
 	 * @param array $arguments

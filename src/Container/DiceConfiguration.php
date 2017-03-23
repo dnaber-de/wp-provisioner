@@ -10,7 +10,7 @@ use WpProvision\Api\WpCommandProvider;
 use WpProvision\Api\WpProvisionerLoader;
 use WpProvision\App\Command\Provision;
 use WpProvision\App\Command\Task;
-use WpProvision\Command\WpCli;
+use WpProvision\Command\GenericCommand;
 use WpProvision\Command\WpCliCommand;
 use WpProvision\Env\Bash;
 use WpProvision\Env\Shell;
@@ -65,7 +65,7 @@ trait DiceConfiguration {
 		);
 
 		$dice->addRule(
-			WpCli::class,
+			GenericCommand::class,
 			[
 				'shared' => true,
 				'substitutions' => [
@@ -147,7 +147,7 @@ trait DiceConfiguration {
 				[
 					'substitutions' => [
 						WpCliCommand::class => [
-							'instance' => WpCli::class
+							'instance' => GenericCommand::class
 						],
 						User::class => [
 							'instance' => WpCliUser::class

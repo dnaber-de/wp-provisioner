@@ -5,7 +5,7 @@ namespace WpProvision\Api;
 use Dice\Dice;
 use WpProvision\App\Command\Provision;
 use WpProvision\App\Command\Task;
-use WpProvision\Command\WpCli;
+use WpProvision\Command\GenericCommand;
 use WpProvision\Container\DiceConfigurator;
 use WpProvision\Container\DiceContainer;
 use WpProvision\Exception\Api\TaskFileNotFound;
@@ -40,7 +40,7 @@ class WpProvisionerLoader {
 	private $process_builder;
 
 	/**
-	 * @var WpCli
+	 * @var GenericCommand
 	 */
 	private $wp_cli;
 

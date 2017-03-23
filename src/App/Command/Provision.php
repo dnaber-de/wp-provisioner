@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
 use WpProvision\Api\SymfonyOutputAdapter;
 use WpProvision\Api\WpCliCommandProvider;
-use WpProvision\Command\WpCli;
+use WpProvision\Command\GenericCommand;
 use WpProvision\Command\WpCliCommand;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
@@ -111,7 +111,7 @@ class Provision extends Command {
 		$version_api = $this->container->get( IsolatedVersions::class );
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
 		/* @var WpCliCommand $wp_cli */
-		$wp_cli = $this->container->get( WpCli::class );
+		$wp_cli = $this->container->get( GenericCommand::class );
 
 		$wp_cli->setWpInstallDir( $this->getWpDir( $input ) );
 		$wp_cli->setWpCliBinary( $this->getWpCliBinary( $input ) );

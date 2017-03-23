@@ -13,6 +13,7 @@ interface WpProvisioner {
 	public function versionList();
 
 	/**
+	 * @deprecated Can only be set via ENV or console option
 	 * @param $wp_dir
 	 */
 	public function setWpDir( $wp_dir );

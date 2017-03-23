@@ -3,7 +3,7 @@
 namespace WpProvision\Container;
 
 use Psr\Container\ContainerInterface;
-use WpProvision\Command\WpCli;
+use WpProvision\Command\GenericCommand;
 
 /**
  * Class DiceConfigurator
