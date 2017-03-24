@@ -14,14 +14,14 @@ final class Bash implements Shell {
 	/**
 	 * @var ProcessBuilder
 	 */
-	private $processBuilder;
+	private $process_builder;
 
 	/**
 	 * @param ProcessBuilder $processBuilder
 	 */
 	public function __construct( ProcessBuilder $processBuilder ) {
 
-		$this->processBuilder = $processBuilder;
+		$this->process_builder = $processBuilder;
 	}
 
 	/**
@@ -31,19 +31,17 @@ final class Bash implements Shell {
 	 */
 	public function commandExists( $command ) {
 
-		// Todo: Use more poratble `command -v` see http://stackoverflow.com/a/4785518/2169046
-		$process = $this
-			->processBuilder
-			->setArguments(
-				[
-					'hash',
-					$command,
-					'2>/dev/null || echo "false"'
-				]
-			)
-			->getProcess();
 
-		$output = $process
+		$args = [
+			'command',
+			'-v',
+			$command,
+			'2>/dev/null 2>&1 || echo "false"'
+		];
+		$output = $this
+			->process_builder
+			->setArguments( $args )
+			->getProcess()
 			->mustRun()
 			->getOutput();
 

@@ -31,7 +31,25 @@ final class Windows implements Shell {
 	 */
 	public function commandExists( $command ) {
 
-		//Todo: use `where $command`, see http://stackoverflow.com/a/18540185/2169046
+		$args = [
+			'where',
+			$command
+		];
+		$output = $this
+			->process_builder
+			->setArguments( $args )
+			->getProcess()
+			->mustRun()
+			->getOutput();
+
+		$output = explode( PHP_EOL, trim( $output ) );
+		foreach ( $output as $path ) {
+			if ( $this->isReadable( trim( $path ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -42,7 +60,12 @@ final class Windows implements Shell {
 	 * @return bool
 	 */
 	public function isExecutable( $file ) {
-		// TODO: Implement isExecutable() method.
+
+		$executable_extensions = [ 'exe', 'bat', 'cmd', 'com' ];
+
+		$extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+
+		return in_array( $extension, $executable_extensions );
 	}
 
 
