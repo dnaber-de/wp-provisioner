@@ -55,4 +55,13 @@ final class Windows implements Shell {
 
 		return is_readable( $file );
 	}
+
+	/**
+	 * @return string
+	 */
+	public function cwd() {
+
+		return getcwd();
+	}
+
 }

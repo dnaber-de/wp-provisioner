@@ -31,4 +31,9 @@ interface Shell {
 	 * @return bool
 	 */
 	public function isReadable( $file );
+
+	/**
+	 * @return string
+	 */
+	public function cwd();
 }
