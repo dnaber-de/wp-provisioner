@@ -2,9 +2,11 @@
 
 namespace WpProvision\Factory;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use WpProvision\Command\GenericCommand;
+use WpProvision\Container\Configurator;
 use WpProvision\Env\Shell;
 use WpProvision\Exception\Factory\WpCliNotFound;
 use WpProvision\Process\SymfonyProcessBuilderAdapter;
@@ -32,19 +34,27 @@ class WpCliCommandFactory {
 	private $shell;
 
 	/**
+	 * @var ContainerInterface
+	 */
+	private $container;
+
+	/**
 	 * @param PhpExecutableFinder $php_finder
 	 * @param ExecutableFinder $exec_finder
 	 * @param Shell $shell
+	 * @param ContainerInterface $container
 	 */
 	public function __construct(
 		PhpExecutableFinder $php_finder,
 		ExecutableFinder $exec_finder,
-		Shell $shell
+		Shell $shell,
+		ContainerInterface $container
 	) {
 
 		$this->php_finder = $php_finder;
 		$this->exec_finder = $exec_finder;
 		$this->shell = $shell;
+		$this->container = $container;
 	}
 
 	/**
@@ -57,7 +67,7 @@ class WpCliCommandFactory {
 
 		$wp_cli = (string) $wp_cli;
 		$wp_cli or $wp_cli = 'wp';
-		$cwd or $cwd = getcwd();
+		$cwd or $cwd = $this->shell->cwd();
 
 		if ( $this->shell->commandExists( $wp_cli ) ) {
 			return $this->buildCommand( [ $wp_cli ], $cwd );
@@ -85,7 +95,8 @@ class WpCliCommandFactory {
 
 	private function buildCommand( array $base, $cwd ) {
 
-		$provider = new SymfonyProcessBuilderAdapter();
+		$provider = $this->container->get( Configurator::WP_CLI_PROCESS_BUILDER );
+		// use set*() instead of with*() here, the instance is meant to be shared/mutable
 		$provider->setPrefix( $base );
 		$provider->setWorkingDirectory( $cwd );
 
