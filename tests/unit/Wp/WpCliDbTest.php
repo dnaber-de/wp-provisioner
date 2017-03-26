@@ -3,7 +3,14 @@
 namespace WpProvision\Wp;
 
 use MonkeryTestCase\MockeryTestCase;
+use Mockery;
+use WpProvision\Command\Command;
 
+/**
+ * Class WpCliDbTest
+ *
+ * @package WpProvision\Wp
+ */
 class WpCliDbTest extends MockeryTestCase  {
 
 	/**
@@ -38,7 +45,17 @@ class WpCliDbTest extends MockeryTestCase  {
 	 * @see WpCliDb::import()
 	 */
 	public function testImport() {
-		$this->markTestIncomplete( 'Under construction' );
+
+		$file = __FILE__;
+		$arguments = [ 'import', $file ];
+		$wp_cli = Mockery::mock( Command::class );
+		$wp_cli->shouldReceive( 'run' )
+			->with( $arguments );
+
+		$testee = new WpCliDb( $wp_cli );
+		$this->assertTrue(
+			$testee->import( $file )
+		);
 	}
 
 	/**

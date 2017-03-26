@@ -3,6 +3,7 @@
 namespace WpProvision\Wp;
 
 use WpProvision\Command\Command;
+use WpProvision\Exception\Wp\InvalidArgumentException;
 
 /**
  * Class WpCliDb
@@ -62,7 +63,20 @@ final class WpCliDb implements Db {
 	 * @return bool
 	 */
 	public function import( $file ) {
-		// TODO: Implement import() method.
+
+		// Todo: Refactor to something testable
+		$file = realpath( $file );
+		if ( false === $file ) {
+			throw new InvalidArgumentException( "Import file not found" );
+		}
+
+		$arguments = [ 'import', $file ];
+		try {
+			$this->wp_cli->run( $arguments );
+			return true;
+		} catch ( \Throwable $e ) {
+			return false;
+		}
 	}
 
 	/**
