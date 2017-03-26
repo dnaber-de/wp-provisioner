@@ -76,7 +76,7 @@ final class WpCliSite implements Site {
 		$urls_match = function( $url_1, $url_2 ) {
 
 			if ( parse_url( $url_1, PHP_URL_HOST ) !== parse_url( $url_2, PHP_URL_HOST ) ) {
-				return FALSE;
+				return false;
 			}
 
 			$url_1_path = parse_url( $url_1, PHP_URL_PATH );
@@ -86,7 +86,7 @@ final class WpCliSite implements Site {
 			$url_2_path = rtrim( $url_2_path, '/' ) . '/';
 
 			if ( $url_1_path !== $url_2_path ) {
-				return FALSE;
+				return false;
 			}
 
 			return TRUE;
@@ -99,14 +99,14 @@ final class WpCliSite implements Site {
 		 *
 		 * @param $line
 		 *
-		 * @return NULL|array
+		 * @return null|array
 		 */
 		$parse_site = function( $line ) {
 			$line = trim( $line );
 			list( $id, $url ) = preg_split( '~\s+~', $line );
 
 			if ( ! is_numeric( $id ) ) {
-				return NULL; // skip table header
+				return null; // skip table header
 			}
 
 			return [ 'id' => (int) $id, 'url' => trim( $url ) ];
@@ -144,7 +144,7 @@ final class WpCliSite implements Site {
 	 *      bool $attributes[ 'private' ]
 	 *      string $attributes[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
 	 * @param int $network_id
-	 * @param bool $graceful Set to FALSE to throw exceptions if anything goes wrong
+	 * @param bool $graceful Set to false to throw exceptions if anything goes wrong
 	 *
 	 * @throws Exception
 	 * @return int
@@ -153,13 +153,13 @@ final class WpCliSite implements Site {
 
 		$user_email = isset( $attributes[ 'user_email' ] )
 			? $attributes[ 'user_email' ]
-			: NULL;
+			: null;
 		if ( $user_email ) {
 			$user_exists = $this->user->exists( $user_email );
 			if ( ! $user_exists && ! $graceful ) {
 				throw new InvalidArgumentException( "User {$user_email} does not exist" );
 			} elseif ( ! $user_exists ) {
-				$user_email = NULL;
+				$user_email = null;
 			}
 		}
 
@@ -175,7 +175,7 @@ final class WpCliSite implements Site {
 		$slug    = substr( sha1( $url ), -8 );
 		$use_url = TRUE;
 		if ( isset( $attributes[ 'slug' ] ) ) {
-			$use_url = FALSE;
+			$use_url = false;
 			$slug    = $attributes[ 'slug' ];
 		}
 

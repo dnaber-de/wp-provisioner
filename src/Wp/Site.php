@@ -35,7 +35,7 @@ interface Site {
 	 *      bool $attributes[ 'private' ]
 	 *      string $attributes[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
 	 * @param int $network_id
-	 * @param bool $graceful Set to FALSE to throw exceptions if anything goes wrong
+	 * @param bool $graceful Set to false to throw exceptions if anything goes wrong
 	 *
 	 * @throws Exception
 	 * @return int

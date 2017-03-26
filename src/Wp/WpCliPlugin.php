@@ -31,7 +31,7 @@ final class WpCliPlugin implements Plugin {
 	 *
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: FALSE
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated networkwide, default: false
 	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter)
 	 *      string $option[ 'site_url' ] The site_url the plugin should be activated in, default: network main site
 	 *
@@ -76,9 +76,9 @@ final class WpCliPlugin implements Plugin {
 	 *
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
-	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: FALSE
-	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: FALSE
-	 *      bool   $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: FALSE
+	 *      bool   $options[ 'network' ] If set to TRUE, the plugin gets activated network wide, default: false
+	 *      bool   $options[ 'all' ] If set to TRUE, all plugins gets activated (regardless of $plugin parameter), default: false
+	 *      bool   $options[ 'uninstall' ] If set to TRUE, the plugin gets uninstalled after deactivation, default: false
 	 *      string $option[ 'site_url' ] The site_url the plugin should be deactivated, default: network main site
 	 *
 	 * @return bool
@@ -138,17 +138,17 @@ final class WpCliPlugin implements Plugin {
 			return TRUE;
 		} catch( Exception $e ) {
 
-			return FALSE;
+			return false;
 		}
 	}
 
 	/**
-	 * Check if a plugin is active. Method will return FALSE if a plugin is active for network but the parameter
-	 * $option[ 'network' ] is omitted or set to 'FALSE'.
+	 * Check if a plugin is active. Method will return false if a plugin is active for network but the parameter
+	 * $option[ 'network' ] is omitted or set to 'false'.
 	 *
 	 * @param string $plugin The plugin slug (e.g. 'multilingual-press', 'akismet' )
 	 * @param array  $options
-	 *      bool   $options[ 'network' ]  Check if the plugin is activated network wide, default: FALSE
+	 *      bool   $options[ 'network' ]  Check if the plugin is activated network wide, default: false
 	 *      string $options[ 'site_url' ] The URL of the site to check (default: the network main site, unused in single-site installs)
 	 *
 	 * @return bool
@@ -183,7 +183,7 @@ final class WpCliPlugin implements Plugin {
 	 * @param string|array $plugin The plugin slug or a list of slugs (e.g. 'multilingual-press', 'akismet' )
 	 * @param array        $options
 	 *      bool   $options[ 'deactivate' ] Deactivate plugin before uninstallation, default: TRUE
-	 *      bool   $option[ 'delete' ] Deletes files after uninstallation , default: FALSE
+	 *      bool   $option[ 'delete' ] Deletes files after uninstallation , default: false
 	 *      string $option[ 'site_url' ] The site_url the uninstall routines should run in, default: network main site
 	 *
 	 * @return bool
@@ -201,7 +201,7 @@ final class WpCliPlugin implements Plugin {
 			$arguments = array_merge( $arguments, $plugin );
 		}
 
-		if ( ! isset( $options[ 'deactivate'] ) || FALSE !== $options[ 'deactivate' ] ) {
+		if ( ! isset( $options[ 'deactivate'] ) || false !== $options[ 'deactivate' ] ) {
 			$arguments[] = '--deactivate';
 		}
 

@@ -14,7 +14,7 @@ interface Core {
 	 *
 	 * @return bool
 	 */
-	public function isInstalled( $network = FALSE );
+	public function isInstalled( $network = false );
 
 	/**
 	 * @param string $url    URL of the new site
@@ -24,8 +24,8 @@ interface Core {
 	 *                       string $admin[ 'password' ] (optional, will be generated if not provided)
 	 * @param array $options
 	 *                       string $options[ 'title' ]
-	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
-	 * @param bool $graceful Throw exceptions, when set to FALSE, default: TRUE
+	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: false
+	 * @param bool $graceful Throw exceptions, when set to false, default: TRUE
 	 *
 	 * @return bool
 	 */
@@ -49,9 +49,9 @@ interface Core {
 	 *                       string $admin[ 'password' ] (optional, will be generated if not provided)
 	 * @param array $options
 	 *                       string $options[ 'title' ]
-	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
+	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: false
 	 *                       bool   $options[ 'subdomains' ] Subdomain install, default: TRUE
-	 * @param bool $graceful Throw exceptions, when set to FALSE, default: TRUE
+	 * @param bool $graceful Throw exceptions, when set to false, default: TRUE
 	 *
 	 * @return bool
 	 */

@@ -9,8 +9,12 @@ namespace WpProvision\Container;
  */
 interface Configurator {
 
+	const WP_CLI_PROCESS_BUILDER = '$wpCliProcessBuilder';
+	const PROCESS_BUILDER = '$processBuilder';
+	const WP_CLI_COMMAND = '$wpCliCommand';
+
 	/**
-	 * @param void
+	 * @param DiceConfigurable $dice
 	 */
-	public function setup();
+	public function configure( DiceConfigurable $dice );
 }

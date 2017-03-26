@@ -9,7 +9,6 @@ use WpProvision\Command\GenericCommand;
 use WpProvision\Container\Configurator;
 use WpProvision\Env\Shell;
 use WpProvision\Exception\Factory\WpCliNotFound;
-use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class WpCliCommandFactory

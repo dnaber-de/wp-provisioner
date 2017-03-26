@@ -36,7 +36,7 @@ interface Process {
 	public function setIdleTimeout( $timeout );
 
 	/**
-	 * @param callable|NULL $callback
+	 * @param callable|null $callback
 	 *
 	 * @see \Symfony\Component\Process\Process::mustRun()
 	 *

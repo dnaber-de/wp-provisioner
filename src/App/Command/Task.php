@@ -2,6 +2,7 @@
 
 namespace WpProvision\App\Command;
 
+use WpProvision\App\Command\Command as ApplicationCommand;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,14 +15,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package WpProvision\App\Command
  */
-class Task extends Command {
+class Task extends Command implements ApplicationCommand {
 
 	const COMMAND_NAME = 'task';
 
 	const ARGUMENT_FILE = 'file';
-
-	const OPTION_WP_DIR = 'wp-dir';
-	const OPTION_WP_CLI = 'wp-cli';
 
 	/**
 	 * @var ContainerInterface
@@ -59,7 +57,7 @@ class Task extends Command {
 				null,
 				InputOption::VALUE_OPTIONAL,
 				'WordPress directory',
-				NULL
+				null
 			)
 			->addOption(
 				self::OPTION_WP_CLI,

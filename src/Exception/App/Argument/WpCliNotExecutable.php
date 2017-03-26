@@ -10,4 +10,4 @@ use WpProvision\Exception\WpProvisionException;
  *
  * @package WpProvision\Exception\App\Argument
  */
-final class WpCliNotExecutable extends RuntimeException implements WpProvisionException {}
+class WpCliNotExecutable extends RuntimeException implements WpProvisionException {}

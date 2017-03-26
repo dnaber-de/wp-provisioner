@@ -6,13 +6,10 @@ use Dice\Dice;
 use WpProvision\App\Command\Provision;
 use WpProvision\App\Command\Task;
 use WpProvision\Command\GenericCommand;
-use WpProvision\Container\DiceConfigurator;
+use WpProvision\Container\DiceAppConfigurator;
 use WpProvision\Container\DiceContainer;
-use WpProvision\Exception\Api\TaskFileNotFound;
-use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\Process\ProcessBuilder;
 use Symfony\Component\Console\Application;
-use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class WpProvisionerLoader
@@ -57,7 +54,7 @@ class WpProvisionerLoader {
 		$this->bootstrap( $base_dir );
 
 		$container = new DiceContainer( new Dice() );
-		( new DiceConfigurator( $container, $container ) )-> setup();
+		( new DiceAppConfigurator( $container ) )->configure( $container );
 
 		$app = $container->get( Application::class );
 		$app->add( $container->get( Provision::class ) );
@@ -68,8 +65,6 @@ class WpProvisionerLoader {
 
 
 	/**
-	 * Todo: Exclude this
-	 *
 	 * @param string $base_dir Path of the libraries root directory
 	 */
 	private function bootstrap( $base_dir ) {

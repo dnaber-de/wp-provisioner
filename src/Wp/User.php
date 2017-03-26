@@ -32,7 +32,7 @@ interface User {
 	 *      bool $attributes[ 'send_mail' ]
 	 *      DateTimeInterface $attributes[ 'registered_at' ]
 	 * @param string $site_url
-	 * @param bool $graceful Set to FALSE to throw exceptions when something goes wrong (e.g. the user already exists)
+	 * @param bool $graceful Set to false to throw exceptions when something goes wrong (e.g. the user already exists)
 	 *
 	 * @throws Exception
 	 * @return int

@@ -22,16 +22,16 @@ interface Versions {
 	 *
 	 * @return bool
 	 */
-	public function executeProvision( $version, $isolation = FALSE );
+	public function executeProvision( $version, $isolation = false );
 
 	/**
 	 * Register a provision routine
-	 * 
+	 *
 	 * @param string   $version
 	 * @param callable $callback
 	 * @param bool     $isolation
 	 *
 	 * @return bool
 	 */
-	public function addProvision( $version, callable $callback, $isolation = FALSE );
+	public function addProvision( $version, callable $callback, $isolation = false );
 }

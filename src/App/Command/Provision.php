@@ -2,38 +2,36 @@
 
 namespace WpProvision\App\Command;
 
-use Psr\Container\ContainerInterface;
+use WpProvision\Api\SymfonyOutputAdapter;
+use WpProvision\Api\WpCliCommandProvider;
+use WpProvision\Container\Configurator;
+use WpProvision\Container\DiceApiConfigurator;
+use WpProvision\Container\DiceConfigurable;
+use WpProvision\Exception\Api\TaskFileNotFound;
+use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
+use WpProvision\App\Command\Command as ApplicationCommand;
 use WpProvision\Api\IsolatedVersions;
-use Symfony\Component\Console\Command\Command;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use LogicException;
-use WpProvision\Api\SymfonyOutputAdapter;
-use WpProvision\Api\WpCliCommandProvider;
-use WpProvision\Command\GenericCommand;
-use WpProvision\Command\WpCliCommand;
-use WpProvision\Exception\Api\TaskFileNotFound;
-use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
-use WpProvision\Exception\App\Argument\WpCliNotExecutable;
-use WpProvision\Exception\App\Argument\WpDirectoryNotFound;
 
 /**
  * Class Provision
  *
  * @package WpProvision\App\Command
  */
-class Provision extends Command {
+class Provision extends SymfonyCommand implements ApplicationCommand {
 
 	const COMMAND_NAME = 'provision';
 
 	const ARGUMENT_VERSION = 'version';
 
 	const OPTION_ISOLATION = 'isolation';
-	const OPTION_WP_DIR = 'wp-dir';
 	const OPTION_TASK_FILE = 'file';
-	const OPTION_WP_CLI = 'wp-cli';
 
 	/**
 	 * @var ContainerInterface
@@ -41,13 +39,28 @@ class Provision extends Command {
 	private $container;
 
 	/**
+	 * @var DiceConfigurable
+	 */
+	private $dice;
+
+	/**
+	 * @var Configurator
+	 */
+	private $configurator;
+
+	/**
 	 * @param ContainerInterface $container
+	 * @param DiceConfigurable $dice
 	 */
 	public function __construct(
-		ContainerInterface $container
+		ContainerInterface $container,
+		DiceConfigurable $dice,
+		Configurator $configurator = null
 	) {
 
 		$this->container = $container;
+		$this->dice = $dice;
+		$this->configurator = $configurator;
 
 		parent::__construct();
 	}
@@ -63,31 +76,31 @@ class Provision extends Command {
 			->addArgument( self::ARGUMENT_VERSION, InputArgument::REQUIRED, 'The version to run provisions for' )
 			->addOption(
 				self::OPTION_ISOLATION,
-				NULL,
+				null,
 				InputOption::VALUE_OPTIONAL,
 				'Skip all version provisioning routines prior the given version',
-				FALSE
+				false
 			)
 			->addOption(
 				self::OPTION_WP_DIR,
 				'w',
 				InputOption::VALUE_OPTIONAL,
 				'WP install directory',
-				NULL
+				null
 			)
 			->addOption(
 				self::OPTION_TASK_FILE,
 				'f',
 				InputOption::VALUE_OPTIONAL,
 				'Task file that defines the version',
-				NULL
+				null
 			)
 			->addOption(
 				self::OPTION_WP_CLI,
-				NULL,
+				null,
 				InputOption::VALUE_OPTIONAL,
 				'Path to WP-CLI executable',
-				'wp'
+				null
 			);
 	}
 
@@ -107,18 +120,11 @@ class Provision extends Command {
 	 * @throws LogicException When this abstract method is not implemented
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
+		$this->configurator or $this->configurator = new DiceApiConfigurator( $this->container, $input );
+		$this->configurator->configure( $this->dice );
 
 		$version_api = $this->container->get( IsolatedVersions::class );
 		$version = $input->getArgument( self::ARGUMENT_VERSION );
-		/* @var WpCliCommand $wp_cli */
-		$wp_cli = $this->container->get( GenericCommand::class );
-
-		$wp_cli->setWpInstallDir( $this->getWpDir( $input ) );
-		$wp_cli->setWpCliBinary( $this->getWpCliBinary( $input ) );
-
-		if ( ! $wp_cli->commandExists() ) {
-			throw new WpCliNotExecutable( "Command: {$wp_cli->base()}");
-		}
 
 		$task_file = $this->getTaskFile( $input );
 		if ( ! is_readable( $task_file ) ) {
@@ -137,6 +143,7 @@ class Provision extends Command {
 		);
 		if ( ! $version_api->versionExists( $version ) ) {
 			$output->writeln( "<error>Error: no provision for {$version} defined</error>" );
+
 			return 1;
 		}
 
@@ -144,24 +151,6 @@ class Provision extends Command {
 		$version_api->executeProvision( $version, $isolation );
 
 		return 0;
-	}
-
-	/**
-	 * @param InputInterface $input
-	 *
-	 * @return string
-	 */
-	private function getWpDir( InputInterface $input ) {
-
-		$wp_dir = $input->getOption( self::OPTION_WP_DIR );
-		$wp_dir and $wp_dir = realpath( $wp_dir );
-		$wp_dir or $wp_dir = getcwd();
-
-		if ( ! is_string( $wp_dir ) || ! is_dir( $wp_dir ) ) {
-			throw new WpDirectoryNotFound();
-		}
-
-		return $wp_dir;
 	}
 
 	/**
@@ -185,17 +174,5 @@ class Provision extends Command {
 		}
 
 		return $file;
-	}
-
-	/**
-	 * @param InputInterface $input
-	 *
-	 * @return string
-	 */
-	private function getWpCliBinary( InputInterface $input ) {
-
-		$wp = $input->getOption( self::OPTION_WP_CLI );
-
-		return $wp;
 	}
 }

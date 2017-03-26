@@ -41,7 +41,7 @@ final class WpCliCore implements Core {
 	 *
 	 * @return bool
 	 */
-	public function isInstalled( $network = FALSE ) {
+	public function isInstalled( $network = false ) {
 
 		$arguments = [ 'core', 'is-installed' ];
 		if ( $network ) {
@@ -52,7 +52,7 @@ final class WpCliCore implements Core {
 			$this->wp_cli->run( $arguments );
 			return TRUE;
 		} catch ( Exception $e ) {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -66,8 +66,8 @@ final class WpCliCore implements Core {
 	 *                       string $admin[ 'password' ] (optional, will be generated if not provided)
 	 * @param array $options
 	 *                       string $options[ 'title' ]
-	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
-	 * @param bool $graceful Throw exceptions, when set to FALSE, default: TRUE
+	 *                       bool   $options[ 'skip_email' ] Skip the information email, default: false
+	 * @param bool $graceful Throw exceptions, when set to false, default: TRUE
 	 *
 	 * @return bool
 	 */
@@ -154,9 +154,9 @@ final class WpCliCore implements Core {
 	 *                         string $admin[ 'password' ] (optional, will be generated if not provided)
 	 * @param array $options
 	 *                         string $options[ 'title' ]
-	 *                         bool   $options[ 'skip_email' ] Skip the information email, default: FALSE
+	 *                         bool   $options[ 'skip_email' ] Skip the information email, default: false
 	 *                         bool   $options[ 'subdomains' ] Subdomain install, default: TRUE
-	 * @param bool $graceful   Throw exceptions, when set to FALSE, default: TRUE
+	 * @param bool $graceful   Throw exceptions, when set to false, default: TRUE
 	 *
 	 * @return bool
 	 */
@@ -212,7 +212,7 @@ final class WpCliCore implements Core {
 			"--admin_password={$password}"
 		];
 
-		if ( ! isset( $options[ 'subdomains'] ) || FALSE !== $options[ 'subdomains' ] ) {
+		if ( ! isset( $options[ 'subdomains'] ) || false !== $options[ 'subdomains' ] ) {
 			$arguments[] = '--subdomains';
 		}
 		if ( isset( $options[ 'skip_email' ] ) && $options[ 'skip_email' ] ) {

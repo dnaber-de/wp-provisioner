@@ -2,7 +2,7 @@
 
 namespace WpProvision\Wp;
 
-use WpProvision\Command\WpCliCommand;
+use WpProvision\Command\Command;
 use WpProvision\Utils\PasswordGenerator;
 use Mockery;
 use MonkeryTestCase;
@@ -14,7 +14,7 @@ class WpCliCoreTest extends MonkeryTestCase\MockeryTestCase {
 	 */
 	public function testIsInstalled() {
 
-		$wp_cli_mock = Mockery::mock( WpCliCommand::class );
+		$wp_cli_mock = Mockery::mock( Command::class );
 		$wp_cli_mock->shouldReceive( 'run' )
 			->with( [ 'core', 'is-installed' ] );
 
@@ -31,7 +31,7 @@ class WpCliCoreTest extends MonkeryTestCase\MockeryTestCase {
 	 */
 	public function testIsInstalledNetwork() {
 
-		$wp_cli_mock = Mockery::mock( WpCliCommand::class );
+		$wp_cli_mock = Mockery::mock( Command::class );
 		$wp_cli_mock->shouldReceive( 'run' )
 			->with( [ 'core', 'is-installed', '--network' ] );
 
@@ -40,7 +40,7 @@ class WpCliCoreTest extends MonkeryTestCase\MockeryTestCase {
 			Mockery::mock( PasswordGenerator::class )
 		);
 
-		$this->assertTrue( $testee->isInstalled( TRUE ) );
+		$this->assertTrue( $testee->isInstalled( true ) );
 	}
 
 	/**
@@ -48,16 +48,16 @@ class WpCliCoreTest extends MonkeryTestCase\MockeryTestCase {
 	 */
 	public function testIsInstalledException() {
 
-		$wp_cli_mock = Mockery::mock( WpCliCommand::class );
+		$wp_cli_mock = Mockery::mock( Command::class );
 		$wp_cli_mock->shouldReceive( 'run' )
-			->with( [ 'core', 'is-installed' ] );
+			->with( [ 'core', 'is-installed', '--network' ] )
+			->andThrow( Mockery::mock( \Exception::class ) );
 
 		$testee = new WpCliCore(
 			$wp_cli_mock,
 			Mockery::mock( PasswordGenerator::class )
 		);
 
-		$this->markAsRisky();
-		#$this->assertTrue( $testee->isInstalled( TRUE ) );
+		$this->assertFalse( $testee->isInstalled( true ) );
 	}
 }

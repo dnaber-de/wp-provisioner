@@ -48,7 +48,7 @@ final class IsolatedVersions implements Versions {
 	 *
 	 * @return bool
 	 */
-	public function executeProvision( $version, $isolation = FALSE ) {
+	public function executeProvision( $version, $isolation = false ) {
 
 		if ( ! $this->versionExists( $version ) ) {
 			throw new LogicException( "No provisioner registered for version '{$version}''" );
@@ -66,7 +66,7 @@ final class IsolatedVersions implements Versions {
 	 *
 	 * @return bool
 	 */
-	public function addProvision( $version, callable $callback, $isolation = FALSE ) {
+	public function addProvision( $version, callable $callback, $isolation = false ) {
 
 		if ( $this->versionExists( $version ) ) {
 			throw new LogicException( "Version '{$version}' already exists" );
