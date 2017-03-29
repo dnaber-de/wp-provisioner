@@ -4,6 +4,7 @@ namespace WpProvision\Api;
 
 use WpProvision\Wp\Cli;
 use WpProvision\Wp\Core;
+use WpProvision\Wp\Db;
 use WpProvision\Wp\Plugin;
 use WpProvision\Wp\Site;
 use WpProvision\Wp\User;
@@ -24,6 +25,11 @@ interface WpCommandProvider {
 	 * @return Core
 	 */
 	public function core();
+
+	/**
+	 * @return Db
+	 */
+	public function db();
 
 	/**
 	 * @return Plugin

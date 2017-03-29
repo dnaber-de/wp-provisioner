@@ -180,10 +180,10 @@ final class DiceApiConfigurator implements Configurator {
 		$commands = [
 			WpCliCli::class,
 			WpCliCore::class,
+			WpCliDb::class,
 			WpCliPlugin::class,
 			WpCliSite::class,
 			WpCliUser::class,
-			WpCliDb::class
 		];
 		foreach ( $commands as $class ) {
 			$dice->addRule(

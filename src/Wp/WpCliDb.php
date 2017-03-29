@@ -4,6 +4,7 @@ namespace WpProvision\Wp;
 
 use WpProvision\Command\Command;
 use WpProvision\Exception\Wp\InvalidArgumentException;
+use WpProvision\Utils\CliOutputParser;
 
 /**
  * Class WpCliDb
@@ -11,6 +12,8 @@ use WpProvision\Exception\Wp\InvalidArgumentException;
  * @package WpProvision\Wp
  */
 final class WpCliDb implements Db {
+
+	use CliOutputParser;
 
 	/**
 	 * @var Command
@@ -75,7 +78,9 @@ final class WpCliDb implements Db {
 			$this->wp_cli->run( $arguments );
 			return true;
 		} catch ( \Throwable $e ) {
-			return false;
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 
@@ -90,10 +95,25 @@ final class WpCliDb implements Db {
 	 * @param string $query
 	 * @param string[]|array[] $sql_arguments (Associative arguments key → value to pass to mysql)
 	 *
-	 * @return string
+	 * @throws Todo
+	 *
+	 * @return array
 	 */
 	public function query( $query, array $sql_arguments = [] ) {
-		// TODO: Implement query() method.
+
+		$arguments = $this->concatArguments(
+			[ 'query', (string) $query ],
+			$sql_arguments
+			// Todo: handle $sql_arguments
+		);
+		try {
+			$result = $this->wp_cli->run( $arguments );
+
+			return $this->parseList( $result );
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -118,16 +138,34 @@ final class WpCliDb implements Db {
 	 * @return array
 	 */
 	public function tables( array $tables = [], array $options = [] ) {
-		// TODO: Implement tables() method.
+
+		try {
+			$arguments = $this->concatArguments(
+				[ 'tables' ],
+				$tables
+				// Todo: handle $options
+			);
+			$result = $this->wp_cli->run( $arguments );
+			is_array( $result ) or $result = explode( PHP_EOL, $result );
+			$result = array_filter( $result, function( $el ) {
+				return ! empty( trim( $el ) );
+			} );
+
+			return $result;
+
+		} catch( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
-	 * @param array $args
+	 * @param string[][] ...$arguments
 	 *
 	 * @return array
 	 */
-	private function arguments( array $args = [] ) {
+	private function concatArguments( array ...$arguments ) {
 
-		return array_merge( [ 'db' ], $args );
+		return array_merge( [ 'db' ], ...$arguments );
 	}
 }

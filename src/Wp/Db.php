@@ -49,7 +49,7 @@ interface Db {
 	 * @param string $query
 	 * @param string[]|array[] $sql_arguments (Associative arguments key → value to pass to mysql)
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function query( $query, array $sql_arguments = [] );
 
