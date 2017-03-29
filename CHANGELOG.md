@@ -18,6 +18,8 @@ This version introduces *backward incompatible* changes
    * That callable receives instances of `WpProvision\Api\Versions`, `WpProvision\Api\WpCommandProvider` and `WpProvision\Api\ConsoleOutput`. See README.md for example.
    * Remove `WpProvision\Api\WpProvisioner`
 * Internal architecture changes
+* Public API might throws exceptions (and do not hide every `Throwable` silently)
+
 
 
 ## [1.0.0-alpha2]
