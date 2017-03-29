@@ -50,9 +50,11 @@ final class WpCliCore implements Core {
 
 		try {
 			$this->wp_cli->run( $arguments );
-			return TRUE;
-		} catch ( Exception $e ) {
-			return false;
+			return true;
+		} catch ( \Throwable $e ) {
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 
@@ -74,16 +76,19 @@ final class WpCliCore implements Core {
 	public function install( $url, array $admin, array $options = [ ], $graceful = TRUE ) {
 
 		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			// Todo
 			throw new InvalidArgumentException( "'{$url}' is not a valid URL" );
 		}
 
 		foreach ( [ 'email', 'login' ] as $admin_key ) {
 			if ( empty( $admin[ $admin_key ] ) ) {
+				// Todo
 				throw new InvalidArgumentException( "Missing array key '{$admin_key}' in \$admin parameter" );
 			}
 		}
 
 		if ( ! filter_var( $admin[ 'email' ], FILTER_VALIDATE_EMAIL ) ) {
+			// Todo
 			throw new InvalidArgumentException( "{$admin[ 'email' ]} is not a valid email" );
 		}
 
@@ -107,9 +112,15 @@ final class WpCliCore implements Core {
 			$arguments[] = '--skip-email';
 		}
 
-		$this->wp_cli->run( $arguments );
+		try {
+			$this->wp_cli->run( $arguments );
+			return true;
 
-		return TRUE;
+		} catch ( \Throwable $e ) {
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -141,9 +152,15 @@ final class WpCliCore implements Core {
 			$arguments[] = "--title={$options[ 'title' ]}";
 		}
 
-		echo $this->wp_cli->run( $arguments );
+		try {
+			$result = $this->wp_cli->run( $arguments );
+			// Todo: maybe parse $result for some hidden notices
+			return true;
+		} catch ( \Throwable $e ) {
 
-		return TRUE;
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -163,16 +180,19 @@ final class WpCliCore implements Core {
 	public function multisiteInstall( $url, array $admin, array $options = [ ], $graceful = TRUE ) {
 
 		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			// Todo
 			throw new InvalidArgumentException( "'{$url}' is not a valid URL" );
 		}
 
 		foreach ( [ 'email', 'login' ] as $admin_key ) {
 			if ( empty( $admin[ $admin_key ] ) ) {
+				// Todo
 				throw new InvalidArgumentException( "Missing array key '{$admin_key}' in \$admin parameter" );
 			}
 		}
 
 		if ( ! filter_var( $admin[ 'email' ], FILTER_VALIDATE_EMAIL ) ) {
+			// Todo
 			throw new InvalidArgumentException( "{$admin[ 'email' ]} is not a valid email" );
 		}
 
@@ -219,8 +239,14 @@ final class WpCliCore implements Core {
 			$arguments[] = '--skip-email';
 		}
 
-		$this->wp_cli->run( $arguments );
+		try {
+			$this->wp_cli->run( $arguments );
 
-		return TRUE;
+			return true;
+		} catch ( \Throwable $e ) {
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 }

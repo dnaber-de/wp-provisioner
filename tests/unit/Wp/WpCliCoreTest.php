@@ -57,7 +57,8 @@ class WpCliCoreTest extends MonkeryTestCase\MockeryTestCase {
 			$wp_cli_mock,
 			Mockery::mock( PasswordGenerator::class )
 		);
+		$this->expectException( \Exception::class );
 
-		$this->assertFalse( $testee->isInstalled( true ) );
+		$testee->isInstalled( true );
 	}
 }
