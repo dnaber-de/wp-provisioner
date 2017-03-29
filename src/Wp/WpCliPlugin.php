@@ -40,6 +40,7 @@ final class WpCliPlugin implements Plugin {
 	public function activate( $plugin, array $options = [ ] ) {
 
 		if ( ! is_array( $plugin ) && ! is_string( $plugin ) ) {
+			// Todo
 			throw new InvalidArgumentException( "First argument \$plugin must be of type string or array" );
 		}
 		$arguments = [ 'plugin', 'activate' ];
@@ -61,9 +62,15 @@ final class WpCliPlugin implements Plugin {
 			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
-		$this->wp_cli->run( $arguments );
+		try {
+			// Todo: Maybe parse response
+			$this->wp_cli->run( $arguments );
 
-		return TRUE;
+			return true;
+		}  catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -86,6 +93,7 @@ final class WpCliPlugin implements Plugin {
 	public function deactivate( $plugin, array $options = [ ] ) {
 
 		if ( ! is_array( $plugin ) && ! is_string( $plugin ) ) {
+			// Todo
 			throw new InvalidArgumentException( "First argument \$plugin must be of type string or array" );
 		}
 		$arguments = [ 'plugin', 'deactivate' ];
@@ -111,9 +119,14 @@ final class WpCliPlugin implements Plugin {
 			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
-		$this->wp_cli->run( $arguments );
+		try {
+			$this->wp_cli->run( $arguments );
 
-		return TRUE;
+			return true;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -129,16 +142,17 @@ final class WpCliPlugin implements Plugin {
 	public function isInstalled( $plugin, array $options = [ ] ) {
 
 		if ( ! is_string( $plugin ) ) {
+			// Todo
 			throw new InvalidArgumentException( "First parameter \$plugin must be of type string" );
 		}
 		$arguments = [ 'plugin', 'is-installed', $plugin ];
 
 		try {
 			$this->wp_cli->run( $arguments );
-			return TRUE;
-		} catch( Exception $e ) {
-
-			return false;
+			return true;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 
@@ -156,6 +170,7 @@ final class WpCliPlugin implements Plugin {
 	public function isActive( $plugin, array $options = [ ] ) {
 
 		if ( ! is_string( $plugin ) ) {
+			// Todo
 			throw new InvalidArgumentException( "First parameter \$plugin must be of type string" );
 		}
 		$arguments = [ 'plugin', 'list', "--name={$plugin}", '--field=status' ];
@@ -163,12 +178,17 @@ final class WpCliPlugin implements Plugin {
 			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
-		$result = trim( $this->wp_cli->run( $arguments ) );
-		if ( isset( $options[ 'network' ] ) && TRUE === $options[ 'network' ] && 'active-network' === $result ) {
-			return TRUE;
-		}
+		try {
+			$result = trim( $this->wp_cli->run( $arguments ) );
+			if ( isset( $options[ 'network' ] ) && true === $options[ 'network' ] && 'active-network' === $result ) {
+				return true;
+			}
 
-		return 'active' === $result;
+			return 'active' === $result;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 
 	/**
@@ -213,8 +233,13 @@ final class WpCliPlugin implements Plugin {
 			$arguments[] = "--url={$options[ 'site_url' ]}";
 		}
 
-		echo $this->wp_cli->run( $arguments );
+		try {
+			$result = $this->wp_cli->run( $arguments );
 
-		return TRUE;
+			return true;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 }

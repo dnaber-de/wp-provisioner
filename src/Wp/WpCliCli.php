@@ -27,9 +27,13 @@ final class WpCliCli implements Cli {
 
 		try {
 			$version = $this->wp_cli->run( [ 'cli', 'version' ] );
+
+			// Todo: use formatter
 			return trim( $version );
-		} catch( \Exception $e ) {
-			return '';
+		}  catch ( \Throwable $e ) {
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 
@@ -40,9 +44,13 @@ final class WpCliCli implements Cli {
 
 		try {
 			$info = $this->wp_cli->run( [ 'cli', 'info' ] );
+
+			// Todo: Use formatter
 			return explode( $info, PHP_EOL );
-		} catch( \Exception $e ) {
-			return [];
+		}  catch ( \Throwable $e ) {
+
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 

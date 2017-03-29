@@ -144,12 +144,12 @@ final class WpCliSite implements Site {
 	 *      bool $attributes[ 'private' ]
 	 *      string $attributes[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
 	 * @param int $network_id
-	 * @param bool $graceful Set to false to throw exceptions if anything goes wrong
+	 * @param bool $graceful Deprecated! Set to false to throw exceptions if anything goes wrong
 	 *
 	 * @throws Exception
 	 * @return int
 	 */
-	public function create( $url, array $attributes = [ ], $network_id = 0, $graceful = TRUE ) {
+	public function create( $url, array $attributes = [ ], $network_id = 0, $graceful = true ) {
 
 		$user_email = isset( $attributes[ 'user_email' ] )
 			? $attributes[ 'user_email' ]
@@ -157,6 +157,7 @@ final class WpCliSite implements Site {
 		if ( $user_email ) {
 			$user_exists = $this->user->exists( $user_email );
 			if ( ! $user_exists && ! $graceful ) {
+				// Todo
 				throw new InvalidArgumentException( "User {$user_email} does not exist" );
 			} elseif ( ! $user_exists ) {
 				$user_email = null;
@@ -165,6 +166,7 @@ final class WpCliSite implements Site {
 
 		$site_id = $this->siteId( $url );
 		if ( 0 !== $site_id && ! $graceful ) {
+			// Todo
 			throw new InvalidArgumentException( "Site {$url} already exists" );
 		} elseif ( 0 !== $site_id ) {
 
@@ -188,6 +190,7 @@ final class WpCliSite implements Site {
 			}
 			// check again...
 			if ( ! $this->plugin->isActive( $cli_site_url_plugin, [ 'network' => TRUE ] ) ) {
+				// Todo
 				throw new LogicException( "Plugin inpsyde/{$cli_site_url_plugin} is not available but required" );
 			}
 		}
@@ -215,10 +218,15 @@ final class WpCliSite implements Site {
 			return $site_id;
 		}
 
-		$this->wp_cli->run(
-			[ 'site-url', 'update', $site_id, $url ]
-		);
+		try {
+			$this->wp_cli->run(
+				[ 'site-url', 'update', $site_id, $url ]
+			);
 
-		return $site_id;
+			return $site_id;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
+		}
 	}
 }

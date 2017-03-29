@@ -40,9 +40,9 @@ final class WpCliUser implements User {
 			$result = trim( $this->wp_cli->run( $arguments ) );
 
 			return (int) $result;
-		} catch( Exception $e ) {
-
-			return 0;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 
@@ -75,11 +75,12 @@ final class WpCliUser implements User {
 	 * @throws Exception
 	 * @return int
 	 */
-	public function create( $login, $email, array $attributes = [ ], $site_url = '', $graceful = TRUE ) {
+	public function create( $login, $email, array $attributes = [], $site_url = '', $graceful = true ) {
 
 		$login_exists = $this->exists( $login );
 		if ( $login_exists && ! $graceful ) {
 			$user_id = $this->userId( $login );
+			// Todo
 			throw new InvalidArgumentException( "User {$login} already exists (ID: {$user_id})" );
 		} elseif ( $login_exists ) {
 
@@ -89,6 +90,7 @@ final class WpCliUser implements User {
 		$email_exists = $this->exists( $email );
 		if ( $email_exists && ! $graceful ) {
 			$user_id = $this->userId( $login );
+			// Todo
 			throw new InvalidArgumentException( "User {$email} already exists (ID: {$user_id})" );
 		} elseif( $email_exists ) {
 
@@ -123,12 +125,9 @@ final class WpCliUser implements User {
 			$result = trim( $this->wp_cli->run( $process_arguments ) );
 
 			return (int) $result;
-		} catch( Exception $e ) {
-			if ( ! $graceful ) {
-				throw $e;
-			}
-
-			return 0;
+		} catch ( \Throwable $e ) {
+			// Todo: Wrap any possible Exception with a WpProvison\Exception
+			throw $e;
 		}
 	}
 }
