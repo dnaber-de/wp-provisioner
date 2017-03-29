@@ -10,6 +10,7 @@ This version introduces *backward incompatible* changes
 * Use DI Container
 * Added options to `provision` command: `--file`, `--wp-dir` `--wp-cli`
 * Exceptions covering the domain structure of the application
+* New sub command `wp-provision task <TASKFILE>` to perform arbitrary tasks
 
 ### Changes
 * Remove direct dependency on `wp-cli/wp-cli` to use Symfony `3.*` components

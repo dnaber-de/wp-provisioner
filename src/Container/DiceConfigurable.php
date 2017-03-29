@@ -5,6 +5,8 @@ namespace WpProvision\Container;
 /**
  * Interface DiceConfigurable
  *
+ * Todo: Rename to ConfigurabeContainer
+ *
  * @package WpProvision\Container
  */
 interface DiceConfigurable {

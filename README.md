@@ -89,6 +89,33 @@ return function( Versions $versions, WpCommandProvider $wp, ConsoleOutput $outpu
 $ vendor/bin/wp-provisioner task tasks.php [--wp-dir <WP_DIR>] [--wp_cli <WP_CLI>]
 ```
 
+The task file must return a callable that will be just executed with the parameters `WpCliCommandProvider` and `ConsoleOutput`. Example:
+
+```php
+<?php # -*- coding: utf-8 -*-
+
+/**
+ * WP Provisioner task file
+ */
+
+namespace WpProvision\Api;
+
+/**
+ * @param WpCliCommandProvider $wp
+ * @param ConsoleOutput $output
+ * 
+ * @return int
+ */
+return function( WpCliCommandProvider $wp, ConsoleOutput $output ) {
+
+	$output->writeln( [ "Fetching post IDs" ] );
+	$tables = $wp->db()
+		->query( "SELECT ID from wp_posts LIMIT 10" );
+	$output->writeln( $tables );
+	
+	return 0;
+};
+```
 
 ## Goal
 The idea of this tool is to automate the process of configuring WordPress as complete as possible to integrate it into already automated deployment processes. However, it is in a early _alpha_ state. Some features are not implemented jet and the API might change slightly.

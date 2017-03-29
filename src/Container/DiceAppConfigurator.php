@@ -7,6 +7,11 @@ use Symfony\Component\Console\Application;
 use WpProvision\Api\WpProvisionerLoader;
 use WpProvision\App\Command\Provision;
 use WpProvision\App\Command\Task;
+use WpProvision\Env\Bash;
+use WpProvision\Env\Shell;
+use WpProvision\Env\Windows;
+use WpProvision\Process\ProcessBuilder;
+use WpProvision\Process\SymfonyProcessBuilderAdapter;
 
 /**
  * Class DiceConfigurator
@@ -54,6 +59,35 @@ final class DiceAppConfigurator implements Configurator {
 			]
 		);
 
+		// independent process builder
+		$dice->addRule(
+			self::PROCESS_BUILDER,
+			[
+				'shared' => false,
+				'instanceOf' => SymfonyProcessBuilderAdapter::class
+			]
+		);
+
+		//Environment
+		$dice->addRule(
+			Windows::class,
+			[
+				'shared' => true,
+				'substitutions' => [
+					ProcessBuilder::class => self::PROCESS_BUILDER
+				]
+			]
+		);
+		$dice->addRule(
+			Bash::class,
+			[
+				'shared' => true,
+				'substitutions' => [
+					ProcessBuilder::class => self::PROCESS_BUILDER
+				]
+			]
+		);
+
 
 		$dice->addRule(
 			Provision::class,
@@ -69,6 +103,9 @@ final class DiceAppConfigurator implements Configurator {
 							return $container->get( '$apiContainer' );
 						}
 					],
+					Shell::class => [
+						'instance' => $this->shellSubstitution()
+					],
 					Configurator::class => [
 						'instance' => function() {
 							return null; // Optional type-hinted dependency
@@ -83,13 +120,35 @@ final class DiceAppConfigurator implements Configurator {
 				'substitutions' => [
 					ContainerInterface::class => [
 						'instance' => function() use ( $container ) {
-							return $container;
+							return $container->get( '$apiContainer' );
+						}
+					],
+					DiceConfigurable::class => [
+						'instance' => function() use ( $container ) {
+							return $container->get( '$apiContainer' );
+						}
+					],
+					Shell::class => [
+						'instance' => $this->shellSubstitution()
+					],
+					Configurator::class => [
+						'instance' => function() {
+							return null; // Optional type-hinted dependency
 						}
 					]
 				]
 			]
 		);
 
+	}
+
+	private function shellSubstitution() {
+
+		return function() {
+			return 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) )
+				? $this->container->get( Windows::class )
+				: $this->container->get( Bash::class );
+		};
 	}
 
 }

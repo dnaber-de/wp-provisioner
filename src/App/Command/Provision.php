@@ -7,6 +7,7 @@ use WpProvision\Api\WpCliCommandProvider;
 use WpProvision\Container\Configurator;
 use WpProvision\Container\DiceApiConfigurator;
 use WpProvision\Container\DiceConfigurable;
+use WpProvision\Env\Shell;
 use WpProvision\Exception\Api\TaskFileNotFound;
 use WpProvision\Exception\Api\TaskFileReturnsNoCallable;
 use WpProvision\App\Command\Command as ApplicationCommand;
@@ -44,6 +45,11 @@ class Provision extends SymfonyCommand implements ApplicationCommand {
 	private $dice;
 
 	/**
+	 * @var Shell
+	 */
+	private $shell;
+
+	/**
 	 * @var Configurator
 	 */
 	private $configurator;
@@ -51,15 +57,19 @@ class Provision extends SymfonyCommand implements ApplicationCommand {
 	/**
 	 * @param ContainerInterface $container
 	 * @param DiceConfigurable $dice
+	 * @param Shell $shell
+	 * @param Configurator $configurator
 	 */
 	public function __construct(
 		ContainerInterface $container,
 		DiceConfigurable $dice,
+		Shell $shell, // Todo: Move to container
 		Configurator $configurator = null
 	) {
 
 		$this->container = $container;
 		$this->dice = $dice;
+		$this->shell = $shell;
 		$this->configurator = $configurator;
 
 		parent::__construct();
@@ -120,6 +130,7 @@ class Provision extends SymfonyCommand implements ApplicationCommand {
 	 * @throws LogicException When this abstract method is not implemented
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
+
 		$this->configurator or $this->configurator = new DiceApiConfigurator( $this->container, $input );
 		$this->configurator->configure( $this->dice );
 
@@ -161,15 +172,15 @@ class Provision extends SymfonyCommand implements ApplicationCommand {
 	private function getTaskFile( InputInterface $input ) {
 
 		$file = $input->getOption( self::OPTION_TASK_FILE );
-		if ( $file && ! is_readable( $file ) ) {
+		if ( $file && ! $this->shell->isReadable( $file ) ) {
 			throw new TaskFileNotFound( "File: {$file}");
 		}
 
 		if ( ! $file ) {
-			$wd = getcwd();
-			$wd and $file = "{$wd}/provision.php";
+			$cwd = $this->shell->cwd();
+			$cwd and $file = "{$cwd}/provision.php";
 		}
-		if ( ! $file && ! is_readable( $file ) ) {
+		if ( ! $file && ! $this->shell->isReadable( $file ) ) {
 			throw new TaskFileNotFound( "File: {$file}" );
 		}
 
