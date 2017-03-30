@@ -34,6 +34,7 @@ final class GenericCommand implements Command  {
 		$process = $this
 			->process_builder
 			->setArguments( $arguments )
+			->setTimeout( null ) // no timeout
 			->getProcess()
 			->mustRun();
 

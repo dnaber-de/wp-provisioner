@@ -26,6 +26,7 @@ use WpProvision\Wp\WpCliCli;
 use WpProvision\Wp\WpCliCore;
 use WpProvision\Wp\WpCliDb;
 use WpProvision\Wp\WpCliPlugin;
+use WpProvision\Wp\WpCliSearchReplace;
 use WpProvision\Wp\WpCliSite;
 use WpProvision\Wp\WpCliUser;
 
@@ -184,6 +185,7 @@ final class DiceApiConfigurator implements Configurator {
 			WpCliPlugin::class,
 			WpCliSite::class,
 			WpCliUser::class,
+			WpCliSearchReplace::class,
 		];
 		foreach ( $commands as $class ) {
 			$dice->addRule(

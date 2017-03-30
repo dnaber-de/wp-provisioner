@@ -6,6 +6,7 @@ use WpProvision\Wp\Cli;
 use WpProvision\Wp\Core;
 use WpProvision\Wp\Db;
 use WpProvision\Wp\Plugin;
+use WpProvision\Wp\SearchReplace;
 use WpProvision\Wp\Site;
 use WpProvision\Wp\User;
 
@@ -35,6 +36,11 @@ interface WpCommandProvider {
 	 * @return Plugin
 	 */
 	public function plugin();
+
+	/**
+	 * @return SearchReplace
+	 */
+	public function searchReplace();
 
 	/**
 	 * @return Site

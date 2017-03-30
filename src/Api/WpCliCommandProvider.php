@@ -7,12 +7,14 @@ use WpProvision\Wp\Cli;
 use WpProvision\Wp\Core;
 use WpProvision\Wp\Db;
 use WpProvision\Wp\Plugin;
+use WpProvision\Wp\SearchReplace;
 use WpProvision\Wp\Site;
 use WpProvision\Wp\User;
 use WpProvision\Wp\WpCliCli;
 use WpProvision\Wp\WpCliCore;
 use WpProvision\Wp\WpCliDb;
 use WpProvision\Wp\WpCliPlugin;
+use WpProvision\Wp\WpCliSearchReplace;
 use WpProvision\Wp\WpCliSite;
 use WpProvision\Wp\WpCliUser;
 
@@ -37,6 +39,7 @@ final class WpCliCommandProvider implements WpCommandProvider {
 	private $plugin;
 	private $site;
 	private $user;
+	private $search_replace;
 
 	public function __construct( ContainerInterface $container ) {
 
@@ -81,6 +84,16 @@ final class WpCliCommandProvider implements WpCommandProvider {
 		$this->plugin or $this->plugin = $this->container->get( WpCliPlugin::class );
 
 		return $this->plugin;
+	}
+
+	/**
+	 * @return SearchReplace
+	 */
+	public function searchReplace() {
+
+		$this->search_replace or $this->search_replace = $this->container->get( WpCliSearchReplace::class );
+
+		return $this->search_replace;
 	}
 
 	/**

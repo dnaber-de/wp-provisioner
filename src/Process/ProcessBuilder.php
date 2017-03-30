@@ -75,4 +75,11 @@ interface ProcessBuilder {
 	 * @return ProcessBuilder
 	 */
 	public function withPrefix( $prefix );
+
+	/**
+	 * @param float|null $timeout Pass null to set no timeout
+	 *
+	 * @return ProcessBuilder
+	 */
+	public function setTimeout( $timeout );
 }
