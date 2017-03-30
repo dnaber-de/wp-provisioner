@@ -5,7 +5,6 @@ namespace WpProvision\Wp;
 use WpProvision\Command\Command;
 use WpProvision\Utils\PasswordGenerator;
 use InvalidArgumentException;
-use Exception;
 
 /**
  * Class WpCliCore
