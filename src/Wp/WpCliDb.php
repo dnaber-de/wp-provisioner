@@ -73,7 +73,7 @@ final class WpCliDb implements Db {
 			throw new InvalidArgumentException( "Import file not found" );
 		}
 
-		$arguments = [ 'import', $file ];
+		$arguments = $this->concatArguments( [ 'import', $file ] );
 		try {
 			$this->wp_cli->run( $arguments );
 			return true;
