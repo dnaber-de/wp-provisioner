@@ -13,11 +13,11 @@ trait CliOutputParser {
 
 	/**
 	 * @param $output
-	 * @param string $line_break (Optional, default to PHP_EOL)
+	 * @param string $line_break (Optional, default to \n)
 	 *
 	 * @return string[]
 	 */
-	private function parseList( $output, $line_break = PHP_EOL ) {
+	private function parseList( $output, $line_break = "\n" ) {
 
 		$list = explode( $line_break, trim( (string) $output ) );
 

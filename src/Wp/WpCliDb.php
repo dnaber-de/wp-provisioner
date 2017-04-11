@@ -146,12 +146,7 @@ final class WpCliDb implements Db {
 				// Todo: handle $options
 			);
 			$result = $this->wp_cli->run( $arguments );
-			is_array( $result ) or $result = explode( PHP_EOL, $result );
-			$result = array_filter( $result, function( $el ) {
-				return ! empty( trim( $el ) );
-			} );
-
-			return $result;
+			return $this->parseList( $result );
 
 		} catch( \Throwable $e ) {
 			// Todo: Wrap any possible Exception with a WpProvison\Exception
