@@ -50,8 +50,7 @@ final class WpCliSearchReplace implements SearchReplace {
 
 		$arguments = array_merge( $arguments, $this->buildOptions( $options ) );
 		try {
-			return $this->wp_cli->run( $arguments );
-
+			$this->wp_cli->run( $arguments );
 			return true;
 		} catch ( \Throwable $e ) {
 			// Todo: Wrap any possible Exception with a WpProvison\Exception
