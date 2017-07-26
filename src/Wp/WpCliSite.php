@@ -6,6 +6,7 @@ use WpProvision\Command\Command;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use WpProvision\Utils\CliOutputParser;
 
 /**
  * Class WpCliSite
@@ -13,6 +14,8 @@ use LogicException;
  * @package WpProvision\Wp
  */
 final class WpCliSite implements Site {
+
+	use CliOutputParser;
 
 	/**
 	 * @var Command
@@ -228,5 +231,71 @@ final class WpCliSite implements Site {
 			// Todo: Wrap any possible Exception with a WpProvison\Exception
 			throw $e;
 		}
+	}
+
+	/**
+	 * @param array $options
+	 *      int $options[ 'network_id' ]
+	 *      array $options[ 'filter' ] (Associative array: field => value)
+	 *      int[] $options[ 'site_in' ]
+	 *      string $options[ 'fields' ] (Fields to return. If only one field is provided, the returned array is flat list)
+	 * @return array (list of associative arrays with [ $field => $value ] structure, unless a single $fields option is provided)
+	 */
+	public function list( array $options = [] ) : array {
+
+		try {
+			$output = $this->wp_cli->run(
+				$this->buildListCommand( $options )
+			);
+
+			return $this->parseListOutput( $output, $options );
+		} catch ( \Throwable $e ) {
+			// Todo
+			throw $e;
+		}
+	}
+
+	private function buildListCommand( array $options = [] ) : array {
+
+		$command = [ 'site', 'list' ];
+		array_key_exists( 'network_id', $options ) and $command[] = '--network=' . (int) $options[ 'network_id' ];
+
+		if ( array_key_exists( 'site_in', $options ) && is_array( $options[ 'site_in' ] ) ) {
+			$site_ids = array_map( 'intval', $options[ 'site_in' ] );
+			$site_ids = implode( ',', $site_ids );
+			$command[] = "--site__in={$site_ids}";
+		}
+
+		if ( array_key_exists( 'fields', $options ) && is_array( $options[ 'fields' ] ) ) {
+			if ( 1 < count( (array) $options[ 'fields' ] ) ) {
+				$fields = array_map( 'strval', $options[ 'fields' ] );
+				$fields = implode( ',', $fields );
+				$command[] = "--fields={$fields}";
+			} else {
+				$field = (string) current( $options[ 'fields' ] );
+				$command[] = "--field={$field}";
+			}
+		}
+
+		if ( array_key_exists( 'filter', $options ) && is_array( $options[ 'filter' ] ) ) {
+			array_walk( $options[ 'filter' ], function( $value, $field ) use ( &$command ) {
+				$value = (string) $value;
+				$field = (string) $field;
+				$command[] = "--{$field}={$value}";
+			} );
+		}
+
+		return $command;
+	}
+
+	private function parseListOutput( string $output, array $options = [] ) {
+
+		if ( ! array_key_exists( 'fields', $options ) || ! is_array( $options[ 'fields' ] ) ) {
+			return $this->parseTable( $output );
+		}
+
+		return 1 < count( $options[ 'fields' ] )
+			? $this->parseTable( $output )
+			: $this->parseList( $output );
 	}
 }

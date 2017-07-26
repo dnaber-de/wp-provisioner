@@ -41,4 +41,14 @@ interface Site {
 	 * @return int
 	 */
 	public function create( $url, array $options = [ ], $network_id = 0, $graceful = true );
+
+	/**
+	 * @param array $options
+	 *      int $options[ 'network_id' ]
+	 *      array $options[ 'filter' ] (Associative array: field => value)
+	 *      int[] $options[ 'site_in' ]
+	 *      string $options[ 'fields' ] (Fields to return. If only one field is provided, the returned array is flat list)
+	 * @return array (list of associative arrays with [ $field => $value ] structure, unless a single $fields option is provided)
+	 */
+	public function list( array $options = [] ) : array;
 }
