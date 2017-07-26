@@ -20,6 +20,7 @@ This version introduces *backward incompatible* changes
    * Remove `WpProvision\Api\WpProvisioner`
 * Internal architecture changes
 * Public API might throws exceptions (and do not hide every `Throwable` silently)
+* Fix required PHP version to `>= 7` in composer.json (it already required this version before)
 
 
 
