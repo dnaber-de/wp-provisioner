@@ -51,7 +51,7 @@ class WpCliDbTest extends MockeryTestCase  {
 	public function testImport() {
 
 		$file = __FILE__;
-		$arguments = [ 'import', $file ];
+		$arguments = [ 'db', 'import', realpath( $file ) ];
 		$wp_cli = Mockery::mock( Command::class );
 		$wp_cli->shouldReceive( 'run' )
 			->with( $arguments );
