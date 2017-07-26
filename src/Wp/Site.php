@@ -29,16 +29,16 @@ interface Site {
 
 	/**
 	 * @param string $url (Site URL including protocol, e.g. https://whatever.mysite.tld/en/ )
-	 * @param array $attributes
-	 *      string $attributes[ 'user_email' ]
-	 *      string $attributes[ 'title' ]
-	 *      bool $attributes[ 'private' ]
-	 *      string $attributes[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
+	 * @param array $options
+	 *      string $options[ 'user_email' ]
+	 *      string $options[ 'title' ]
+	 *      bool $options[ 'private' ]
+	 *      string $options[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
 	 * @param int $network_id
 	 * @param bool $graceful Deprecated Set to false to throw exceptions if anything goes wrong
 	 *
 	 * @throws Exception
 	 * @return int
 	 */
-	public function create( $url, array $attributes = [ ], $network_id = 0, $graceful = true );
+	public function create( $url, array $options = [ ], $network_id = 0, $graceful = true );
 }

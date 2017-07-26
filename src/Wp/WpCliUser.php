@@ -61,21 +61,21 @@ final class WpCliUser implements User {
 	 *
 	 * @param $login
 	 * @param $email
-	 * @param array $attributes
-	 *      string $attributes[ 'role' ]
-	 *      string $attributes[ 'password' ]
-	 *      string $attributes[ 'first_name' ]
-	 *      string $attributes[ 'last_name' ]
-	 *      string $attributes[ 'display_name' ]
-	 *      bool $attributes[ 'send_mail' ]
-	 *      DateTimeInterface $attributes[ 'registered_at' ]
+	 * @param array $options
+	 *      string $options[ 'role' ]
+	 *      string $options[ 'password' ]
+	 *      string $options[ 'first_name' ]
+	 *      string $options[ 'last_name' ]
+	 *      string $options[ 'display_name' ]
+	 *      bool $options[ 'send_mail' ]
+	 *      DateTimeInterface $options[ 'registered_at' ]
 	 * @param string $site_url
 	 * @param bool $graceful Set to false to throw exceptions when something goes wrong (e.g. the user already exists)
 	 *
 	 * @throws Exception
 	 * @return int
 	 */
-	public function create( $login, $email, array $attributes = [], $site_url = '', $graceful = true ) {
+	public function create( $login, $email, array $options = [], $site_url = '', $graceful = true ) {
 
 		$login_exists = $this->exists( $login );
 		if ( $login_exists && ! $graceful ) {
@@ -106,19 +106,19 @@ final class WpCliUser implements User {
 			'display_name' => '--display_name='
 		];
 		foreach ( $attr_keys as $attribute_key => $process_attribute ) {
-			if ( empty( $attributes[ $attribute_key ] ) ) {
+			if ( empty( $options[ $attribute_key ] ) ) {
 				continue;
 			}
-			$process_arguments[] = $process_attribute . $attributes[ $attribute_key ];
+			$process_arguments[] = $process_attribute . $options[ $attribute_key ];
 		}
 
-		if ( isset( $attributes[ 'send_mail' ] ) && $attributes[ 'send_mail' ] ) {
+		if ( isset( $options[ 'send_mail' ] ) && $options[ 'send_mail' ] ) {
 			$process_arguments[] = '--send_mail';
 		}
 
-		if ( isset( $attributes[ 'registered_at' ] ) && is_a( $attributes[ 'registered_at' ], 'DateTimeInterface' ) ) {
-			/* @var DateTimeInterface $$attributes[ 'registered_at' ] */
-			$process_arguments[] = '--user_registered=' . $attributes[ 'registered_at' ]->format( 'Y-m-d' );
+		if ( isset( $options[ 'registered_at' ] ) && is_a( $options[ 'registered_at' ], 'DateTimeInterface' ) ) {
+			/* @var DateTimeInterface $options[ 'registered_at' ] */
+			$process_arguments[] = '--user_registered=' . $options[ 'registered_at' ]->format( 'Y-m-d' );
 		}
 
 		try {

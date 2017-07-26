@@ -138,21 +138,21 @@ final class WpCliSite implements Site {
 	 * @link http://wp-cli.org/commands/site/create/
 	 *
 	 * @param string $url (Site URL including protocol, e.g. https://whatever.mysite.tld/en/ )
-	 * @param array $attributes
-	 *      string $attributes[ 'user_email' ]
-	 *      string $attributes[ 'title' ]
-	 *      bool $attributes[ 'private' ]
-	 *      string $attributes[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
+	 * @param array $options
+	 *      string $options[ 'user_email' ]
+	 *      string $options[ 'title' ]
+	 *      bool $options[ 'private' ]
+	 *      string $options[ 'slug' ] (Ignores the URL parameter and just create the site with this slug)
 	 * @param int $network_id
 	 * @param bool $graceful Deprecated! Set to false to throw exceptions if anything goes wrong
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return int
 	 */
-	public function create( $url, array $attributes = [ ], $network_id = 0, $graceful = true ) {
+	public function create( $url, array $options = [ ], $network_id = 0, $graceful = true ) {
 
-		$user_email = isset( $attributes[ 'user_email' ] )
-			? $attributes[ 'user_email' ]
+		$user_email = isset( $options[ 'user_email' ] )
+			? $options[ 'user_email' ]
 			: null;
 		if ( $user_email ) {
 			$user_exists = $this->user->exists( $user_email );
@@ -176,9 +176,9 @@ final class WpCliSite implements Site {
 		// temporary slug
 		$slug    = substr( sha1( $url ), -8 );
 		$use_url = TRUE;
-		if ( isset( $attributes[ 'slug' ] ) ) {
+		if ( isset( $options[ 'slug' ] ) ) {
 			$use_url = false;
-			$slug    = $attributes[ 'slug' ];
+			$slug    = $options[ 'slug' ];
 		}
 
 		// check dependencies
@@ -200,14 +200,14 @@ final class WpCliSite implements Site {
 		if ( $user_email ) {
 			$create_args[] = "--email={$user_email}";
 		}
-		if ( ! empty( $attributes[ 'title' ] ) ) {
-			$create_args[] = "--title={$attributes[ 'title' ]}";
+		if ( ! empty( $options[ 'title' ] ) ) {
+			$create_args[] = "--title={$options[ 'title' ]}";
 		}
 		if ( $network_id ) {
 			$network_id = (int) $network_id;
 			$create_args[] = "--network_id={$network_id}";
 		}
-		if ( ! empty( $attributes[ 'private' ] ) ) {
+		if ( ! empty( $options[ 'private' ] ) ) {
 			$create_args[] = '--private';
 		}
 
