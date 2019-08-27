@@ -102,7 +102,7 @@ final class WpCliDb implements Db {
 	public function query( $query, array $sql_arguments = [] ) {
 
 		$arguments = $this->concatArguments(
-			[ 'query', (string) $query ],
+            ['query', escapeshellarg((string)$query)],
 			$sql_arguments
 			// Todo: handle $sql_arguments
 		);
