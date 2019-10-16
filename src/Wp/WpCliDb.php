@@ -142,8 +142,8 @@ final class WpCliDb implements Db {
 		try {
 			$arguments = $this->concatArguments(
 				[ 'tables' ],
-				$tables
-				// Todo: handle $options
+				$tables,
+                $this->buildOptions( $options )
 			);
 			$result = $this->wp_cli->run( $arguments );
 			return $this->parseList( $result );
@@ -163,4 +163,24 @@ final class WpCliDb implements Db {
 
 		return array_merge( [ 'db' ], ...$arguments );
 	}
+
+    private function buildOptions( array $options ) {
+
+        $arguments = [];
+
+        $flags = [
+            'scope' => '--scope',
+            'network' => '--network',
+            'all_tables' => '--all-tables',
+            'all_tables_with_prefix' => '--all-tables-with-prefix',
+        ];
+        foreach ( $flags as $flag => $argument ) {
+            if ( empty( $options[ $flag ] ) ) {
+                continue;
+            }
+            true === $options[ $flag ] and $arguments[] = $argument;
+        }
+
+        return $arguments;
+    }
 }
